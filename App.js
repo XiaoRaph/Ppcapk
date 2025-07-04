@@ -1,5 +1,7 @@
+// Fichier App.js CORRIGÉ
+
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 const CHOICES = [
   { name: 'Pierre', beats: 'Ciseaux' },
@@ -13,42 +15,44 @@ const App = () => {
   const [playerScore, setPlayerScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
   const [result, setResult] = useState('');
-
-  // Fonction pour que l'ordinateur fasse un choix aléatoire
-  const computerRandomChoice = () => {
-    const randomIndex = Math.floor(Math.random() * CHOICES.length);
-    setComputerChoice(CHOICES[randomIndex]);
-  };
+  const [gameInProgress, setGameInProgress] = useState(true);
 
   // Fonction pour gérer le choix du joueur
   const handlePlayerChoice = (choiceName) => {
+    if (!gameInProgress) return; // Empêche de cliquer pendant l'affichage du résultat
+
     const selectedChoice = CHOICES.find(c => c.name === choiceName);
+    const randomIndex = Math.floor(Math.random() * CHOICES.length);
+    const compChoice = CHOICES[randomIndex];
+
     setPlayerChoice(selectedChoice);
-    computerRandomChoice(); // L'ordinateur choisit après le joueur
+    setComputerChoice(compChoice);
+
+    if (selectedChoice.name === compChoice.name) {
+      setResult('Égalité !');
+    } else if (selectedChoice.beats === compChoice.name) {
+      setResult('Victoire !');
+      setPlayerScore(prevScore => prevScore + 1);
+    } else {
+      setResult('Défaite !');
+      setComputerScore(prevScore => prevScore + 1);
+    }
+    setGameInProgress(false); // La manche est terminée, on affiche le résultat
   };
 
-  // Déterminer le résultat de la manche
-  useEffect(() => {
-    if (playerChoice && computerChoice) {
-      if (playerChoice.name === computerChoice.name) {
-        setResult('Égalité !');
-      } else if (playerChoice.beats === computerChoice.name) {
-        setResult('Victoire !');
-        setPlayerScore(prevScore => prevScore + 1);
-      } else {
-        setResult('Défaite !');
-        setComputerScore(prevScore => prevScore + 1);
-      }
-    }
-  }, [playerChoice, computerChoice]);
-
-  // Fonction pour réinitialiser le jeu
-  const resetGame = () => {
+  // Fonction pour démarrer la prochaine manche
+  const nextRound = () => {
     setPlayerChoice(null);
     setComputerChoice(null);
+    setResult('');
+    setGameInProgress(true); // On peut rejouer
+  };
+
+  // Fonction pour réinitialiser tout le jeu
+  const resetGame = () => {
+    nextRound();
     setPlayerScore(0);
     setComputerScore(0);
-    setResult('');
   };
 
   return (
@@ -62,42 +66,51 @@ const App = () => {
 
       <View style={styles.choicesContainer}>
         <Text style={styles.choiceText}>
-          Vous: {playerChoice ? playerChoice.name : '-'}
+          Votre choix : {playerChoice ? playerChoice.name : '-'}
         </Text>
         <Text style={styles.choiceText}>
-          Ordinateur: {computerChoice ? computerChoice.name : '-'}
+          Choix de l'ordi : {computerChoice ? computerChoice.name : '-'}
         </Text>
       </View>
 
-      {result !== '' && (
-        <Text style={[
-          styles.resultText,
-          result === 'Victoire !' ? styles.winText : {},
-          result === 'Défaite !' ? styles.loseText : {},
-          result === 'Égalité !' ? styles.tieText : {},
-        ]}>
-          {result}
-        </Text>
-      )}
-
-      <View style={styles.buttonsContainer}>
-        {CHOICES.map(choice => (
-          <TouchableOpacity
-            key={choice.name}
-            style={styles.button}
-            onPress={() => handlePlayerChoice(choice.name)}
-            disabled={!!result && playerChoice && computerChoice} // Désactiver après un choix jusqu'à la prochaine manche (implicite par le reset ou la continuation)
-          >
-            <Text style={styles.buttonText}>{choice.name}</Text>
-          </TouchableOpacity>
-        ))}
+      <View style={styles.gameArea}>
+        {!gameInProgress ? (
+          <>
+            <Text style={[
+              styles.resultText,
+              result === 'Victoire !' ? styles.winText : {},
+              result === 'Défaite !' ? styles.loseText : {},
+              result === 'Égalité !' ? styles.tieText : {},
+            ]}>
+              {result}
+            </Text>
+            <TouchableOpacity
+              style={[styles.button, styles.playAgainButton]}
+              onPress={nextRound}
+            >
+              <Text style={styles.buttonText}>Jouer encore</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <View style={styles.buttonsContainer}>
+            {CHOICES.map(choice => (
+              <TouchableOpacity
+                key={choice.name}
+                style={styles.button}
+                onPress={() => handlePlayerChoice(choice.name)}
+              >
+                <Text style={styles.buttonText}>{choice.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       <TouchableOpacity
         style={[styles.button, styles.resetButton]}
         onPress={resetGame}
       >
-        <Text style={styles.buttonText}>Réinitialiser</Text>
+        <Text style={styles.buttonText}>Réinitialiser le Score</Text>
       </TouchableOpacity>
     </View>
   );
@@ -106,16 +119,16 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5', // Fond légèrement gris
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   scoreContainer: {
     flexDirection: 'row',
@@ -135,56 +148,53 @@ const styles = StyleSheet.create({
   choiceText: {
     fontSize: 18,
     color: '#444',
-    marginBottom: 5,
+  },
+  gameArea: { // Nouveau conteneur pour stabiliser l'interface
+    minHeight: 150,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   resultText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    overflow: 'hidden', // Pour que le borderRadius s'applique au fond
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    overflow: 'hidden',
+    textAlign: 'center',
   },
-  winText: {
-    color: 'white',
-    backgroundColor: '#4CAF50', // Vert
-  },
-  loseText: {
-    color: 'white',
-    backgroundColor: '#F44336', // Rouge
-  },
-  tieText: {
-    color: 'white',
-    backgroundColor: '#FFC107', // Ambre
-  },
+  winText: { color: 'white', backgroundColor: '#4CAF50' },
+  loseText: { color: 'white', backgroundColor: '#F44336' },
+  tieText: { color: 'white', backgroundColor: '#FFC107' },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '90%',
-    marginBottom: 30,
+    width: '100%',
   },
   button: {
-    backgroundColor: '#007AFF', // Bleu standard iOS
+    backgroundColor: '#007AFF',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
-    minWidth: 100,
+    minWidth: 110,
     alignItems: 'center',
-    elevation: 2, // Ombre légère pour Android
-    shadowColor: '#000', // Ombre pour iOS
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
+  playAgainButton: {
+    backgroundColor: '#28a745',
+    width: '80%',
+  },
   resetButton: {
-    backgroundColor: '#DC3545', // Rouge distinctif
-    width: '90%', // Prendre plus de largeur
+    backgroundColor: '#6c757d',
+    width: '90%',
+    position: 'absolute',
+    bottom: 30,
   },
 });
 
