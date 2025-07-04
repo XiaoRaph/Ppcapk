@@ -1,4 +1,29 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MonJeu
+
+This is a [**React Native**](https://reactnative.dev) application that lets you play the classic game of "Pierre, Papier, Ciseaux" (Rock, Paper, Scissors) against an AI. It also features an "About" screen with a fun, Star Wars-inspired animated text crawl.
+
+## Features
+
+- Play Rock, Paper, Scissors against the computer.
+- Score tracking for both player and computer.
+- Ability to reset the game and scores.
+- "About" screen displaying application information with a unique scrolling text animation.
+- Drawer navigation to easily switch between the Game and About screens.
+
+## Screens
+
+-   **Game Screen:** This is the main screen where all the action happens! Choose your move and see if you can beat the computer.
+-   **About Screen:** Curious about the app? This screen presents information in a visually engaging, animated way.
+
+## How to Play
+
+1.  Navigate to the "Jeu : Pierre, Papier, Ciseaux" screen using the drawer menu (if not already there).
+2.  Tap on "Pierre", "Papier", or "Ciseaux" to make your choice.
+3.  The computer will randomly select its move.
+4.  The result of the round (Victoire!, Défaite!, Égalité!) will be displayed.
+5.  Scores are updated automatically.
+6.  Tap "Jouer encore" to start a new round.
+7.  Tap "Réinitialiser le Score" to reset both scores to zero and start fresh.
 
 # Getting Started
 
@@ -50,7 +75,7 @@ This is one way to run your app — you can also run it directly from within And
 
 Now that you have successfully run the app, let's modify it.
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
+1. Open `App.js` in your text editor of choice and edit some lines.
 2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
 
    For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
