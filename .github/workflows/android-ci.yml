@@ -23,7 +23,7 @@ jobs:
           npm install
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v1
+        uses: android-actions/setup-android@v2
 
       - name: Build APK
         run: |
