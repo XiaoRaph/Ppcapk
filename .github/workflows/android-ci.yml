@@ -22,6 +22,15 @@ jobs:
         run: |
           npm install
 
+      - name: Verify Patched Files
+        run: |
+          echo "--- Contents of react-native-screens/android/build.gradle ---"
+          cat node_modules/react-native-screens/android/build.gradle || echo "File not found: node_modules/react-native-screens/android/build.gradle"
+          echo "--- End of react-native-screens/android/build.gradle ---"
+          echo "--- Contents of RNScreensPackage.kt ---"
+          cat node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt || echo "File not found: node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt"
+          echo "--- End of RNScreensPackage.kt ---"
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
