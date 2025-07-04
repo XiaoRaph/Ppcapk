@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   overlay: { // Added overlay style
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)', // Optional: add a semi-transparent overlay to make text more readable
+    backgroundColor: 'rgba(0,0,0,0.6)', // Increased opacity for better text readability
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFFFFF', // Changed to white for better contrast on dark overlay
     marginBottom: 20,
   },
   scoreContainer: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#555',
+    color: '#FFFFFF', // Changed to white for better contrast
   },
   choicesContainer: {
     marginBottom: 20,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   choiceText: {
     fontSize: 18,
-    color: '#444',
+    color: '#FFFFFF', // Changed to white for better contrast
   },
   gameArea: { // Nouveau conteneur pour stabiliser l'interface
     minHeight: 150,
