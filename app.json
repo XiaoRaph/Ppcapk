@@ -1,0 +1,12 @@
+{
+  "name": "Pierre Papier Ciseaux",
+  "slug": "pierre-papier-ciseaux",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "updates": {
+    "fallbackToCacheTimeout": 0
+  },
+  "assetBundlePatterns": ["**/*"],
+  "android": {
+    "package": "com.xiaoraph.pierrepapiersciseaux"
+  }
