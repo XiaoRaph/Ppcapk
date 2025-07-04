@@ -84,16 +84,6 @@ jobs:
         if: secrets.GITHUB_ACTIONS_SIGNING_KEY_BASE64 == ''
         run: echo "::warning:: Keystore secret (GITHUB_ACTIONS_SIGNING_KEY_BASE64) not found. APK will not be signed or will fail at signing if signing is mandatory."
 
-  notify-failure:
-    name: Notify on Failure
-    runs-on: ubuntu-latest
-    if: failure() && github.event_name == 'push' # S'exécute seulement si un job précédent a échoué et que c'est un push
-    steps:
-      - name: Send Failure Notification (Example)
-        run: echo "::error:: Le build de l'APK a échoué pour le commit ${{ github.sha }} sur la branche ${{ github.ref_name }}."
-        # Ici, vous pourriez intégrer une action pour envoyer une notification Slack, email, etc.
-        # Par exemple, en utilisant une action du Marketplace.
-
 # Instructions pour configurer les secrets GitHub (à faire dans les paramètres du dépôt > Secrets and variables > Actions):
 # 1. GITHUB_ACTIONS_SIGNING_KEY_BASE64:
 #    - Sur votre machine locale, où vous avez votre fichier `my-release-key.keystore`:
