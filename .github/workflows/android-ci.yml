@@ -67,7 +67,7 @@ jobs:
         with:
           name: RockPaperScissors-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
-        if-no-files-found: error # Fait échouer le workflow si l'APK n'est pas trouvé
+          if-no-files-found: error # Fait échouer le workflow si l'APK n'est pas trouvé
 
       - name: Notify if Keystore secret is missing (Optional)
         if: secrets.GITHUB_ACTIONS_SIGNING_KEY_BASE64 == ''
