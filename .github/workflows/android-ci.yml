@@ -92,11 +92,7 @@ jobs:
       - name: Send Failure Notification (Example)
         run: echo "::error:: Le build de l'APK a échoué pour le commit ${{ github.sha }} sur la branche ${{ github.ref_name }}."
         # Ici, vous pourriez intégrer une action pour envoyer une notification Slack, email, etc.
-        # Exemple : (nécessiterait une action spécifique comme ithub-action-slack)
-        # uses: ithub-action-slack@v1
-        # with:
-        #   slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }} # Un autre secret pour l'URL du webhook Slack
-        #   message: "Build APK a échoué : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        # Par exemple, en utilisant une action du Marketplace.
 
 # Instructions pour configurer les secrets GitHub (à faire dans les paramètres du dépôt > Secrets and variables > Actions):
 # 1. GITHUB_ACTIONS_SIGNING_KEY_BASE64:
