@@ -1,7 +1,9 @@
 // Fichier App.js CORRIGÉ
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+
+const backgroundImage = require('./assets/images/play_store_512.png');
 
 const CHOICES = [
   { name: 'Pierre', beats: 'Ciseaux' },
@@ -56,10 +58,11 @@ const App = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+      <View style={styles.overlay}>
+        <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
 
-      <View style={styles.scoreContainer}>
+        <View style={styles.scoreContainer}>
         <Text style={styles.scoreText}>Vous: {playerScore}</Text>
         <Text style={styles.scoreText}>Ordinateur: {computerScore}</Text>
       </View>
@@ -112,18 +115,34 @@ const App = () => {
       >
         <Text style={styles.buttonText}>Réinitialiser le Score</Text>
       </TouchableOpacity>
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlay: { // Added overlay style
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)', // Optional: add a semi-transparent overlay to make text more readable
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    width: '100%', // Ensure overlay takes full width
   },
+  // container: { // This style seems redundant now as overlay and backgroundImage handle the layout.
+  //   flex: 1,
+  //   // backgroundColor: '#f5f5f5', // Removed as background is now an image
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   padding: 20,
+  // },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
