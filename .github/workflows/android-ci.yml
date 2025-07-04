@@ -54,11 +54,6 @@ jobs:
           echo "Gradle properties for signing created."
         working-directory: ./ # S'assurer que le chemin vers android/gradle.properties est correct
 
-      # Alternative: Si vous ne voulez pas créer un fichier gradle.properties complet dans le workflow
-      # vous pouvez passer les variables d'environnement directement à la commande gradle
-      # en préfixant avec ORG_GRADLE_PROJECT_ (par exemple ORG_GRADLE_PROJECT_MYAPP_RELEASE_STORE_PASSWORD)
-      # et en modifiant build.gradle pour lire ces propriétés (System.getenv())
-
       - name: Give gradlew execution permission
         run: chmod +x android/gradlew
         working-directory: ./
@@ -66,23 +61,31 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
         working-directory: ./android
-        # Si vous utilisez la méthode des variables d'environnement pour Gradle:
-        # env:
-        #   ORG_GRADLE_PROJECT_MYAPP_RELEASE_STORE_FILE: my-release-key.keystore
-        #   ORG_GRADLE_PROJECT_MYAPP_RELEASE_KEY_ALIAS: ${{ secrets.GITHUB_ACTIONS_KEY_ALIAS }}
-        #   ORG_GRADLE_PROJECT_MYAPP_RELEASE_STORE_PASSWORD: ${{ secrets.GITHUB_ACTIONS_STORE_PASSWORD }}
-        #   ORG_GRADLE_PROJECT_MYAPP_RELEASE_KEY_PASSWORD: ${{ secrets.GITHUB_ACTIONS_KEY_PASSWORD }}
 
       - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: RockPaperScissors-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error # Fait échouer le workflow si l'APK n'est pas trouvé
+        if-no-files-found: error # Fait échouer le workflow si l'APK n'est pas trouvé
 
       - name: Notify if Keystore secret is missing (Optional)
         if: secrets.GITHUB_ACTIONS_SIGNING_KEY_BASE64 == ''
         run: echo "::warning:: Keystore secret (GITHUB_ACTIONS_SIGNING_KEY_BASE64) not found. APK will not be signed or will fail at signing if signing is mandatory."
+
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name == 'push' # S'exécute seulement si un job précédent a échoué et que c'est un push
+    steps:
+      - name: Send Failure Notification (Example)
+        run: echo "::error:: Le build de l'APK a échoué pour le commit ${{ github.sha }} sur la branche ${{ github.ref_name }}."
+        # Ici, vous pourriez intégrer une action pour envoyer une notification Slack, email, etc.
+        # Exemple : (nécessiterait une action spécifique comme ithub-action-slack)
+        # uses: ithub-action-slack@v1
+        # with:
+        #   slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }} # Un autre secret pour l'URL du webhook Slack
+        #   message: "Build APK a échoué : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
 # Instructions pour configurer les secrets GitHub (à faire dans les paramètres du dépôt > Secrets and variables > Actions):
 # 1. GITHUB_ACTIONS_SIGNING_KEY_BASE64:
@@ -100,31 +103,13 @@ jobs:
 # `MYAPP_RELEASE_STORE_FILE`, `MYAPP_RELEASE_KEY_ALIAS`, `MYAPP_RELEASE_STORE_PASSWORD`, `MYAPP_RELEASE_KEY_PASSWORD`
 # pour la configuration de signature `release`, comme indiqué dans les instructions de génération d'APK.
 # Le workflow crée un fichier `android/gradle.properties` qui sera lu par Gradle lors du build.
-# Si ce fichier `gradle.properties` n'est pas dans votre .gitignore, assurez-vous qu'il ne contienne pas de secrets
-# si vous le committez. Le workflow le crée dynamiquement.
-# Il est recommandé d'ajouter `android/gradle.properties` à votre `.gitignore` si vous le créez localement pour des tests,
-# afin d'éviter de commiter des secrets par erreur. Le workflow le générera de toute façon.
-#
-# Si vous avez déjà un `android/gradle.properties` dans votre dépôt, assurez-vous qu'il ne
-# contienne pas de valeurs en dur pour les secrets de signature. Le workflow le remplacera
-# ou vous devrez ajuster le workflow pour qu'il ajoute/modifie les lignes nécessaires.
-# La méthode utilisée ici (créer/écraser android/gradle.properties) est simple pour le workflow.
+# Il est recommandé d'ajouter `android/gradle.properties` à votre `.gitignore`.
 #
 # Pour que ce workflow fonctionne, le fichier `my-release-key.keystore` n'a PAS besoin d'être
 # dans le dépôt. Il est injecté via le secret GITHUB_ACTIONS_SIGNING_KEY_BASE64.
 #
 # N'oubliez pas de configurer les secrets mentionnés ci-dessus dans les paramètres de votre dépôt GitHub.
 # Sans eux, la partie signature échouera et l'APK de release ne sera pas généré correctement.
-# Si vous ne configurez pas les secrets de signature, le build pourrait réussir mais produire un APK non signé
-# ou échouer à l'étape `assembleRelease` si la configuration de signature est obligatoire.
-# L'étape "Decode Keystore" et "Create gradle.properties for signing" ne s'exécuteront que si
-# GITHUB_ACTIONS_SIGNING_KEY_BASE64 est défini, permettant un build non signé si ce secret n'est pas fourni.
-# Cependant, `assembleRelease` attend généralement une configuration de signature.
-# Vous pourriez avoir une configuration de build distincte pour les PRs qui ne signe pas l'APK.
-# Pour cet exemple, nous supposons que `assembleRelease` nécessite une signature.
-#
-# Le JDK et Node.js sont mis en cache pour accélérer les builds suivants.
-# L'artefact APK sera disponible au téléchargement depuis la page de résumé du workflow une fois l'action terminée.
 #
 # Adaptez les versions de Node.js et JDK selon les besoins de votre version de React Native.
 # La version 17 du JDK est souvent requise pour les builds Android récents.
