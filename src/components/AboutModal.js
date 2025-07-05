@@ -1,61 +1,19 @@
-import React,_useEffect,_useState_from_'react';
-import_{_Modal,_Text,_View,_StyleSheet,_TouchableOpacity,_ScrollView,_ActivityIndicator_}_from_'react-native';
-// Since we are outside of the 'src' directory for assets, adjust the path.
-// React Native's bundler will handle the 'require' for text files if configured,
-// otherwise, we might need to use fs or include the text directly.
-// For simplicity with bundler, let's assume a direct import or fetch is needed if 'require' doesn't work.
-// However, 'react-native-fs' would be a more robust way for runtime file reading.
-// Given the constraints, let's try a simpler approach or simulate it.
+// Fichier : src/components/AboutModal.js
+// Version corrigée et nettoyée
 
-// Placeholder for the text content. In a real scenario, you might fetch this.
-// For now, to ensure it works without complex file system access setup in React Native:
+import React from 'react';
+import { Modal, Text, View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+
+// Le contenu est directement dans le fichier pour plus de simplicité.
 const aboutTextContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
 const AboutModal = ({ visible, onClose }) => {
-  // const [text, setText] = useState('');
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   // This is a common pattern for fetching local data, but .txt might not be directly requirable.
-  //   // If direct require is not supported for .txt files by default in your Metro bundler config,
-  //   // this would need a different approach (e.g., bundling text as JS module, or using react-native-fs).
-  //   // For now, let's use the hardcoded text.
-  //   // try {
-  //   //   const fileContent = require('../../assets/text/about.txt'); // Path relative to this file
-  //   //   setText(fileContent);
-  //   // } catch (error) {
-  //   //   console.error("Failed to load about text:", error);
-  //   //   setText("Failed to load content.");
-  //   // }
-  //   // setLoading(false);
-  //   // Simulating loading for now:
-  //   setText(aboutTextContent);
-  //   setLoading(false);
-  // }, []);
-
-  // if (loading) {
-  //   return (
-  //     <Modal
-  //       animationType="slide"
-  //       transparent={true}
-  //       visible={visible}
-  //       onRequestClose={onClose}
-  //     >
-  //       <View style={styles.centeredView}>
-  //         <View style={styles.modalView}>
-  //           <ActivityIndicator size="large" />
-  //         </View>
-  //       </View>
-  //     </Modal>
-  //   );
-  // }
-
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={onClose} // Permet de fermer le modal avec le bouton "retour" d'Android
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
@@ -64,7 +22,7 @@ const AboutModal = ({ visible, onClose }) => {
             <Text style={styles.modalText}>{aboutTextContent}</Text>
           </ScrollView>
           <TouchableOpacity
-            style={{ ...styles.button, backgroundColor: '#2196F3' }}
+            style={[styles.button, styles.buttonClose]}
             onPress={onClose}
           >
             <Text style={styles.textStyle}>Fermer</Text>
@@ -80,13 +38,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent
   },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 25, // Un peu moins de padding
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -101,24 +59,27 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    marginBottom: 15,
   },
   modalTextTitle: {
     marginBottom: 15,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'left',
     fontSize: 16,
+    lineHeight: 24, // Améliore la lisibilité
   },
   button: {
     borderRadius: 10,
-    padding: 10,
+    padding: 12,
     elevation: 2,
-    marginTop: 10,
+    minWidth: 120, // Donne une largeur minimale au bouton
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
   },
   textStyle: {
     color: 'white',
