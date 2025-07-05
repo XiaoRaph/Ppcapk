@@ -1,7 +1,8 @@
 // Fichier GameScreen.js (anciennement App.js)
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Modal } from 'react-native';
+import AboutModal from '../components/AboutModal'; // Import the AboutModal component
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Adjusted path
 
@@ -11,13 +12,15 @@ const CHOICES = [
   { name: 'Ciseaux', beats: 'Papier' },
 ];
 
-const GameScreen = () => { // Removed navigation prop
+const GameScreen = ({ navigation }) => { // Added navigation prop
   const [playerChoice, setPlayerChoice] = useState(null);
   const [computerChoice, setComputerChoice] = useState(null);
   const [playerScore, setPlayerScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
   const [result, setResult] = useState('');
   const [gameInProgress, setGameInProgress] = useState(true);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isAboutModalVisible, setIsAboutModalVisible] = useState(false);
 
   // Fonction pour gérer le choix du joueur
   const handlePlayerChoice = (choiceName) => {
@@ -60,11 +63,58 @@ const GameScreen = () => { // Removed navigation prop
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.overlay}>
+        {/* Menu Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isMenuVisible}
+          onRequestClose={() => setIsMenuVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPressOut={() => setIsMenuVisible(false)} // Close by clicking outside
+          >
+            <View style={styles.menuModalView}>
+              <Text style={styles.menuModalTitle}>Menu</Text>
+              <TouchableOpacity
+                style={styles.menuButtonOption}
+                onPress={() => {
+                  setIsMenuVisible(false);
+                  setIsAboutModalVisible(true);
+                }}
+              >
+                <Text style={styles.menuButtonOptionText}>À Propos</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.menuButtonOption}
+                onPress={() => {
+                  setIsMenuVisible(false);
+                  navigation.navigate('SnakeGame');
+                }}
+              >
+                <Text style={styles.menuButtonOptionText}>Snake</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.menuButtonOption, styles.menuCloseButton]}
+                onPress={() => setIsMenuVisible(false)}
+              >
+                <Text style={styles.menuButtonOptionText}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        {/* About Modal */}
+        <AboutModal
+          visible={isAboutModalVisible}
+          onClose={() => setIsAboutModalVisible(false)}
+        />
+
         <View style={styles.headerContainer}>
-          {/* <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
-            <Text style={styles.menuButtonText}>☰</Text>
-          </TouchableOpacity> */}
-          <View style={{ width: 50 }} />{/* Placeholder for balance - left */}
+          <TouchableOpacity onPress={() => setIsMenuVisible(true)} style={styles.actualMenuButton}>
+            <Text style={styles.actualMenuButtonText}>☰</Text>
+          </TouchableOpacity>
           <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
           <View style={{ width: 50 }} />{/* Placeholder for balance - right */}
         </View>
@@ -153,23 +203,24 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // Distributes space between button, title, and placeholder
+    justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 10, // Add some padding
-    marginTop: 20, // Margin from the top of the overlay
-    marginBottom: 10, // Margin below the header
+    paddingHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  menuButton: {
+  actualMenuButton: { // Renamed from menuButton to avoid conflict with modal styles
     padding: 10,
-    // backgroundColor: 'rgba(255,255,255,0.2)', // Optional: slight background for button
+    // backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 5,
+    zIndex: 1, // Ensure it's clickable over other elements if any overlap
   },
-  menuButtonText: {
+  actualMenuButtonText: { // Renamed from menuButtonText
     color: '#FFFFFF',
-    fontSize: 28, // Hamburger icon size
+    fontSize: 28,
   },
   title: {
-    fontSize: 28, // Slightly reduced size to fit with button
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
@@ -241,6 +292,53 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
   },
+  // Styles for the Menu Modal
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)', // Dimmed background for the modal
+  },
+  menuModalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 25,
+    alignItems: 'stretch', // Stretch items to fill width
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '80%', // Modal width
+  },
+  menuModalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  menuButtonOption: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10, // Space between menu items
+  },
+  menuButtonOptionText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  menuCloseButton: {
+    backgroundColor: '#6c757d', // A different color for the close button
+    marginTop: 10, // Add some space above the close button
+  }
 });
 
 export default GameScreen; // Renamed export
