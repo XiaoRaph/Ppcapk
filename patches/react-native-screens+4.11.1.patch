@@ -35,17 +35,6 @@ index ed43348..281640c 100644
              override fun doFrame(frameTimeNanos: Long) {
                  isLayoutEnqueued = false
                  // The following measure specs are selected to work only with Android APIs <= 29.
-diff --git a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt
-index 0fad01c..55204ca 100644
---- a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt
-+++ b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt
-@@ -1,6 +1,5 @@
- package com.swmansion.rnscreens
-
--import com.facebook.react.BaseReactPackage
- import com.facebook.react.bridge.NativeModule
- import com.facebook.react.bridge.ReactApplicationContext
- import com.facebook.react.module.annotations.ReactModuleList
 diff --git a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenContainer.kt b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenContainer.kt
 index af34087..6fc6d6e 100644
 --- a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenContainer.kt
