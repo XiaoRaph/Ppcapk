@@ -1,8 +1,7 @@
 // Fichier GameScreen.js (anciennement App.js)
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Adjusted path
 
@@ -12,8 +11,7 @@ const CHOICES = [
   { name: 'Ciseaux', beats: 'Papier' },
 ];
 
-const GameScreen = ({ navigation }) => { // Added navigation prop
-  // const navigation = useNavigation(); // Alternative if not directly passed
+const GameScreen = () => { // Removed navigation prop
   const [playerChoice, setPlayerChoice] = useState(null);
   const [computerChoice, setComputerChoice] = useState(null);
   const [playerScore, setPlayerScore] = useState(0);
@@ -63,11 +61,12 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
+          {/* <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
             <Text style={styles.menuButtonText}>☰</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={{ width: 50 }} />{/* Placeholder for balance - left */}
           <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
-          <View style={{ width: 50 }} />{/* Placeholder for balance */}
+          <View style={{ width: 50 }} />{/* Placeholder for balance - right */}
         </View>
 
         <View style={styles.scoreContainer}>

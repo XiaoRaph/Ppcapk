@@ -1,23 +1,20 @@
 # MonJeu
 
-This is a [**React Native**](https://reactnative.dev) application that lets you play the classic game of "Pierre, Papier, Ciseaux" (Rock, Paper, Scissors) against an AI. It also features an "About" screen with a fun, Star Wars-inspired animated text crawl.
+This is a [**React Native**](https://reactnative.dev) application that lets you play the classic game of "Pierre, Papier, Ciseaux" (Rock, Paper, Scissors) against an AI.
 
 ## Features
 
 - Play Rock, Paper, Scissors against the computer.
 - Score tracking for both player and computer.
 - Ability to reset the game and scores.
-- "About" screen displaying application information with a unique scrolling text animation.
-- Drawer navigation to easily switch between the Game and About screens.
 
-## Screens
+## Screen
 
 -   **Game Screen:** This is the main screen where all the action happens! Choose your move and see if you can beat the computer.
--   **About Screen:** Curious about the app? This screen presents information in a visually engaging, animated way.
 
 ## How to Play
 
-1.  Navigate to the "Jeu : Pierre, Papier, Ciseaux" screen using the drawer menu (if not already there).
+1.  The game screen will load automatically when you start the app.
 2.  Tap on "Pierre", "Papier", or "Ciseaux" to make your choice.
 3.  The computer will randomly select its move.
 4.  The result of the round (Victoire!, Défaite!, Égalité!) will be displayed.
