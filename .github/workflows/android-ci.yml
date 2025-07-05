@@ -1,45 +1,51 @@
+# Fichier de workflow GitHub Actions FINAL et CORRIGÉ
+
 name: Build Android APK
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch: # Permet de lancer l'action manuellement depuis l'interface GitHub
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Récupérer votre code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Mettre en place Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
+      # 3. Mettre en place Java pour Android
+      - name: Setup Java (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Recommandé pour React Native 0.73+
+
+      # 4. Installer les dépendances JavaScript
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
-      - name: Verify Patched Files
-        run: |
-          echo "--- Contents of react-native-screens/android/build.gradle ---"
-          cat node_modules/react-native-screens/android/build.gradle || echo "File not found: node_modules/react-native-screens/android/build.gradle"
-          echo "--- End of react-native-screens/android/build.gradle ---"
-          echo "--- Contents of RNScreensPackage.kt ---"
-          cat node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt || echo "File not found: node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt"
-          echo "--- End of RNScreensPackage.kt ---"
+      # 5. NETTOYER le cache de build Android (Étape CRUCIALE)
+      #    Ceci force une reconstruction propre et évite les erreurs de cache.
+      - name: Clean Gradle build
+        run: cd android && ./gradlew clean
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+      # 6. Construire l'APK de Release
+      - name: Build Release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
 
-      - name: Build APK
-        run: |
-          cd android && ./gradlew assembleRelease --no-daemon
-
+      # 7. Téléverser l'APK généré comme un artefact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release.apk
+          name: app-release.apk # Nom du fichier que vous téléchargerez
           path: android/app/build/outputs/apk/release/app-release.apk
