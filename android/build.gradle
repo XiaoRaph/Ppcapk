@@ -1,3 +1,6 @@
+// Fichier : /android/build.gradle
+// Version corrigée et complète
+
 buildscript {
     ext {
         buildToolsVersion = "34.0.0"
@@ -5,17 +8,29 @@ buildscript {
         compileSdkVersion = 34
         targetSdkVersion = 34
         ndkVersion = "25.1.8937393"
-        kotlinVersion = "1.9.0"
+        kotlinVersion = "1.9.0" // La version de Kotlin utilisée par tout le projet
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.2.1") // Spécifier explicitement la version AGP
+        classpath("com.android.tools.build:gradle:8.2.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") // Utiliser la variable kotlinVersion
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+// NOUVEAU BLOC AJOUTÉ À LA FIN
+// Force tous les sous-projets (y compris ceux dans node_modules) à utiliser la même
+// version de Kotlin définie dans `ext.kotlinVersion`. Cela résout les conflits
+// de version entre les librairies comme react-native-screens et le projet principal.
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.ext.kotlinVersion"
+        }
+    }
+}
