@@ -11,3 +11,4 @@ Ce document définit le contexte de développement pour ce projet. Merci de le p
 ## 2. Spécifications Techniques
 
 *   **Version de React Native :** Le projet est basé sur **React Native `0.73.6`**. Toute nouvelle librairie doit être compatible avec cette version.
+*   **package.json** : Modifie uniquement ce fichier et ne modifie jamais package-lock.json : si des modifications doivent être apporté indique le dans ton push comment
