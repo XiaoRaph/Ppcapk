@@ -15,15 +15,12 @@ const babelLoaderConfiguration = {
     path.resolve(appDirectory, 'node_modules/react-native-gesture-handler'),
     path.resolve(appDirectory, 'node_modules/react-native-screens'),
     path.resolve(appDirectory, 'node_modules/react-native-safe-area-context'),
-    path.resolve(appDirectory, 'node_modules/@react-navigation'),
   ],
   use: {
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
-      // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
       presets: ['module:@react-native/babel-preset', '@babel/preset-react'],
-      // Re-write import statements to use the web-specific version of the library
       plugins: ['react-native-web', 'react-native-reanimated/plugin'],
     },
   },
@@ -48,15 +45,13 @@ const cssLoaderConfiguration = {
 
 module.exports = {
   entry: [
-    // load any polyfills or collections that your app needs,
-    // e.g. 'babel-polyfill',
     path.resolve(appDirectory, 'index.web.js'),
   ],
 
-  // configures where the build ends up
   output: {
     filename: 'bundle.web.js',
     path: path.resolve(appDirectory, 'dist'),
+    clean: true,
   },
 
   module: {
@@ -68,12 +63,9 @@ module.exports = {
   },
 
   resolve: {
-    // This will map the 'react-native' package to 'react-native-web'.
     alias: {
       'react-native$': 'react-native-web',
     },
-    // If you're working on a multi-platform project, web.js or web.tsx
-    // can be used to help separate web-specific logic from native-specific logic.
     extensions: ['.web.js', '.js'],
   },
 
@@ -82,7 +74,6 @@ module.exports = {
       template: path.resolve(appDirectory, 'public/index.html'),
     }),
     new webpack.DefinePlugin({
-      // The variable below is needed for 'react-native-web'
       __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
     }),
   ],
@@ -93,5 +84,8 @@ module.exports = {
       directory: path.join(__dirname, 'public'),
     },
     hot: true,
+    port: 3000,
+    host: '0.0.0.0',
+    allowedHosts: 'all',
   },
 };
