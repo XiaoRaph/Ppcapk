@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import GameScreen from './src/screens/GameScreen';
 import SnakeGameScreen from './src/screens/SnakeGameScreen';
 
@@ -19,11 +20,19 @@ function App() {
   };
 
   return (
-    <>
+    <View style={styles.container}>
       {currentScreen === 'Game' && <GameScreen navigation={navigation} />}
       {currentScreen === 'SnakeGame' && <SnakeGameScreen navigation={navigation} />}
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+  },
+});
 
 export default App;
