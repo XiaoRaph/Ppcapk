@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Alert } from 'react-native';
 
-const { width } = Dimensions.get('window');
-const GRID_SIZE = 20;
-const CELL_SIZE = Math.floor((width - 40) / GRID_SIZE);
-const INITIAL_SNAKE = [{ x: 10, y: 10 }, { x: 10, y: 11 }, { x: 10, y: 12 }];
+const { width, height } = Dimensions.get('window');
+const GRID_SIZE = 10;
+// Calculate cell size based on screen dimensions, ensuring a minimum size and avoiding negative values
+const CELL_SIZE = Math.max(
+  Math.floor(Math.min(width - 40, height - 420) / GRID_SIZE),
+  10
+);
+const INITIAL_SNAKE = [{ x: 5, y: 5 }, { x: 5, y: 6 }, { x: 5, y: 7 }];
 const INITIAL_DIRECTION = { x: 0, y: -1 };
 
 const getRandomFood = (snake) => {
