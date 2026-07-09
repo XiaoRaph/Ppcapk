@@ -61,6 +61,18 @@ const MenuScreen = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#a000f0'}]}
+              onPress={() => navigation.navigate('TetrisGame')}>
+              <Text style={styles.menuButtonEmoji}>🧱</Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Tetris Rétro</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Empilez les blocs et complétez les lignes
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity

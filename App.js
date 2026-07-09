@@ -4,6 +4,7 @@ import MenuScreen from './src/screens/MenuScreen';
 import GameScreen from './src/screens/GameScreen';
 import SnakeGameScreen from './src/screens/SnakeGameScreen';
 import PongGameScreen from './src/screens/PongGameScreen';
+import TetrisGameScreen from './src/screens/TetrisGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -30,6 +31,9 @@ function App() {
       )}
       {currentScreen === 'PongGame' && (
         <PongGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'TetrisGame' && (
+        <TetrisGameScreen navigation={navigation} />
       )}
     </View>
   );
