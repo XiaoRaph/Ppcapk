@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import MenuScreen from './src/screens/MenuScreen';
 import GameScreen from './src/screens/GameScreen';
 import SnakeGameScreen from './src/screens/SnakeGameScreen';
+import PongGameScreen from './src/screens/PongGameScreen';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('Game');
+  const [currentScreen, setCurrentScreen] = useState('Menu');
 
   const navigate = (screenName) => {
     setCurrentScreen(screenName);
   };
 
   const goBack = () => {
-    setCurrentScreen('Game');
+    setCurrentScreen('Menu');
   };
 
   const navigation = {
@@ -21,8 +23,10 @@ function App() {
 
   return (
     <View style={styles.container}>
+      {currentScreen === 'Menu' && <MenuScreen navigation={navigation} />}
       {currentScreen === 'Game' && <GameScreen navigation={navigation} />}
       {currentScreen === 'SnakeGame' && <SnakeGameScreen navigation={navigation} />}
+      {currentScreen === 'PongGame' && <PongGameScreen navigation={navigation} />}
     </View>
   );
 }
