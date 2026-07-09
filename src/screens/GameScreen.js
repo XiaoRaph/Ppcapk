@@ -1,18 +1,26 @@
 // Fichier GameScreen.js (anciennement App.js)
 
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Modal } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  Modal,
+} from 'react-native';
 import AboutModal from '../components/AboutModal'; // Import the AboutModal component
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Adjusted path
 
 const CHOICES = [
-  { name: 'Pierre', beats: 'Ciseaux' },
-  { name: 'Papier', beats: 'Pierre' },
-  { name: 'Ciseaux', beats: 'Papier' },
+  {name: 'Pierre', beats: 'Ciseaux'},
+  {name: 'Papier', beats: 'Pierre'},
+  {name: 'Ciseaux', beats: 'Papier'},
 ];
 
-const GameScreen = ({ navigation }) => { // Added navigation prop
+const GameScreen = ({navigation}) => {
+  // Added navigation prop
   const [playerChoice, setPlayerChoice] = useState(null);
   const [computerChoice, setComputerChoice] = useState(null);
   const [playerScore, setPlayerScore] = useState(0);
@@ -23,10 +31,20 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
   const [isAboutModalVisible, setIsAboutModalVisible] = useState(false);
 
   // Fonction pour gérer le choix du joueur
-  const handlePlayerChoice = (choiceName) => {
-    if (!gameInProgress) return; // Empêche de cliquer pendant l'affichage du résultat
+  const handlePlayerChoice = choiceName => {
+    if (!gameInProgress) {
+      return;
+    } // Empêche de cliquer pendant l'affichage du résultat
 
     const selectedChoice = CHOICES.find(c => c.name === choiceName);
+
+    // 🛡️ SECURITY ENHANCEMENT: Input validation (defensive coding)
+    // Prevent unhandled TypeErrors/crashes (client-side DoS) if an unexpected or malicious choiceName is passed.
+    if (!selectedChoice) {
+      console.warn(`[Sentinel] Invalid player choice attempt: ${choiceName}`);
+      return;
+    }
+
     const randomIndex = Math.floor(Math.random() * CHOICES.length);
     const compChoice = CHOICES[randomIndex];
 
@@ -68,8 +86,7 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
           animationType="fade"
           transparent={true}
           visible={isMenuVisible}
-          onRequestClose={() => setIsMenuVisible(false)}
-        >
+          onRequestClose={() => setIsMenuVisible(false)}>
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
@@ -79,13 +96,14 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
               <Text style={styles.menuModalTitle}>Menu</Text>
 
               <TouchableOpacity
-                style={[styles.menuButtonOption, { backgroundColor: '#FFD700' }]}
+                style={[styles.menuButtonOption, {backgroundColor: '#FFD700'}]}
                 onPress={() => {
                   setIsMenuVisible(false);
                   navigation.goBack();
-                }}
-              >
-                <Text style={[styles.menuButtonOptionText, { color: '#000' }]}>🏠 Menu Principal</Text>
+                }}>
+                <Text style={[styles.menuButtonOptionText, {color: '#000'}]}>
+                  🏠 Menu Principal
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -93,35 +111,31 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
                 onPress={() => {
                   setIsMenuVisible(false);
                   navigation.navigate('SnakeGame');
-                }}
-              >
+                }}>
                 <Text style={styles.menuButtonOptionText}>🐍 Snake Game</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.menuButtonOption, { backgroundColor: '#e74c3c' }]}
+                style={[styles.menuButtonOption, {backgroundColor: '#e74c3c'}]}
                 onPress={() => {
                   setIsMenuVisible(false);
                   navigation.navigate('PongGame');
-                }}
-              >
+                }}>
                 <Text style={styles.menuButtonOptionText}>🏓 Pong Classic</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.menuButtonOption, { backgroundColor: '#6c757d' }]}
+                style={[styles.menuButtonOption, {backgroundColor: '#6c757d'}]}
                 onPress={() => {
                   setIsMenuVisible(false);
                   setIsAboutModalVisible(true);
-                }}
-              >
+                }}>
                 <Text style={styles.menuButtonOptionText}>ℹ️ À Propos</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.menuButtonOption, styles.menuCloseButton]}
-                onPress={() => setIsMenuVisible(false)}
-              >
+                onPress={() => setIsMenuVisible(false)}>
                 <Text style={styles.menuButtonOptionText}>Fermer</Text>
               </TouchableOpacity>
             </View>
@@ -135,66 +149,67 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
         />
 
         <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => setIsMenuVisible(true)} style={styles.actualMenuButton}>
+          <TouchableOpacity
+            onPress={() => setIsMenuVisible(true)}
+            style={styles.actualMenuButton}>
             <Text style={styles.actualMenuButtonText}>☰</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
-          <View style={{ width: 50 }} />{/* Placeholder for balance - right */}
+          <View style={{width: 50}} />
+          {/* Placeholder for balance - right */}
         </View>
 
         <View style={styles.scoreContainer}>
-        <Text style={styles.scoreText}>Vous: {playerScore}</Text>
-        <Text style={styles.scoreText}>Ordinateur: {computerScore}</Text>
-      </View>
+          <Text style={styles.scoreText}>Vous: {playerScore}</Text>
+          <Text style={styles.scoreText}>Ordinateur: {computerScore}</Text>
+        </View>
 
-      <View style={styles.choicesContainer}>
-        <Text style={styles.choiceText}>
-          Votre choix : {playerChoice ? playerChoice.name : '-'}
-        </Text>
-        <Text style={styles.choiceText}>
-          Choix de l'ordi : {computerChoice ? computerChoice.name : '-'}
-        </Text>
-      </View>
+        <View style={styles.choicesContainer}>
+          <Text style={styles.choiceText}>
+            Votre choix : {playerChoice ? playerChoice.name : '-'}
+          </Text>
+          <Text style={styles.choiceText}>
+            Choix de l'ordi : {computerChoice ? computerChoice.name : '-'}
+          </Text>
+        </View>
 
-      <View style={styles.gameArea}>
-        {!gameInProgress ? (
-          <>
-            <Text style={[
-              styles.resultText,
-              result === 'Victoire !' ? styles.winText : {},
-              result === 'Défaite !' ? styles.loseText : {},
-              result === 'Égalité !' ? styles.tieText : {},
-            ]}>
-              {result}
-            </Text>
-            <TouchableOpacity
-              style={[styles.button, styles.playAgainButton]}
-              onPress={nextRound}
-            >
-              <Text style={styles.buttonText}>Jouer encore</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <View style={styles.buttonsContainer}>
-            {CHOICES.map(choice => (
+        <View style={styles.gameArea}>
+          {!gameInProgress ? (
+            <>
+              <Text
+                style={[
+                  styles.resultText,
+                  result === 'Victoire !' ? styles.winText : {},
+                  result === 'Défaite !' ? styles.loseText : {},
+                  result === 'Égalité !' ? styles.tieText : {},
+                ]}>
+                {result}
+              </Text>
               <TouchableOpacity
-                key={choice.name}
-                style={styles.button}
-                onPress={() => handlePlayerChoice(choice.name)}
-              >
-                <Text style={styles.buttonText}>{choice.name}</Text>
+                style={[styles.button, styles.playAgainButton]}
+                onPress={nextRound}>
+                <Text style={styles.buttonText}>Jouer encore</Text>
               </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
+            </>
+          ) : (
+            <View style={styles.buttonsContainer}>
+              {CHOICES.map(choice => (
+                <TouchableOpacity
+                  key={choice.name}
+                  style={styles.button}
+                  onPress={() => handlePlayerChoice(choice.name)}>
+                  <Text style={styles.buttonText}>{choice.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
 
-      <TouchableOpacity
-        style={[styles.button, styles.resetButton]}
-        onPress={resetGame}
-      >
-        <Text style={styles.buttonText}>Réinitialiser le Score</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.resetButton]}
+          onPress={resetGame}>
+          <Text style={styles.buttonText}>Réinitialiser le Score</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -208,7 +223,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  overlay: { // Added overlay style
+  overlay: {
+    // Added overlay style
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)', // Increased opacity for better text readability
     alignItems: 'center',
@@ -232,13 +248,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
-  actualMenuButton: { // Renamed from menuButton to avoid conflict with modal styles
+  actualMenuButton: {
+    // Renamed from menuButton to avoid conflict with modal styles
     padding: 10,
     // backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 5,
     zIndex: 1, // Ensure it's clickable over other elements if any overlap
   },
-  actualMenuButtonText: { // Renamed from menuButtonText
+  actualMenuButtonText: {
+    // Renamed from menuButtonText
     color: '#FFFFFF',
     fontSize: 28,
   },
@@ -268,7 +286,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF', // Changed to white for better contrast
   },
-  gameArea: { // Nouveau conteneur pour stabiliser l'interface
+  gameArea: {
+    // Nouveau conteneur pour stabiliser l'interface
     minHeight: 150,
     width: '100%',
     alignItems: 'center',
@@ -284,9 +303,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     textAlign: 'center',
   },
-  winText: { color: 'white', backgroundColor: '#4CAF50' },
-  loseText: { color: 'white', backgroundColor: '#F44336' },
-  tieText: { color: 'white', backgroundColor: '#FFC107' },
+  winText: {color: 'white', backgroundColor: '#4CAF50'},
+  loseText: {color: 'white', backgroundColor: '#F44336'},
+  tieText: {color: 'white', backgroundColor: '#FFC107'},
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -361,7 +380,7 @@ const styles = StyleSheet.create({
   menuCloseButton: {
     backgroundColor: '#6c757d', // A different color for the close button
     marginTop: 10, // Add some space above the close button
-  }
+  },
 });
 
 export default GameScreen; // Renamed export
