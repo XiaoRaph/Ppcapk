@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, SafeAreaView } from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  SafeAreaView,
+} from 'react-native';
 import AboutModal from '../components/AboutModal';
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Retro background or fallback
 
-const MenuScreen = ({ navigation }) => {
+const MenuScreen = ({navigation}) => {
   const [isAboutModalVisible, setIsAboutModalVisible] = useState(false);
 
   return (
@@ -18,43 +25,47 @@ const MenuScreen = ({ navigation }) => {
 
           <View style={styles.menuContainer}>
             <TouchableOpacity
-              style={[styles.menuButton, { borderLeftColor: '#007AFF' }]}
-              onPress={() => navigation.navigate('Game')}
-            >
+              style={[styles.menuButton, {borderLeftColor: '#007AFF'}]}
+              onPress={() => navigation.navigate('Game')}>
               <Text style={styles.menuButtonEmoji}>✊✌️✋</Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Pierre, Papier, Ciseaux</Text>
-                <Text style={styles.menuButtonDesc}>Défiez l'ordinateur dans ce jeu classique</Text>
+                <Text style={styles.menuButtonTitle}>
+                  Pierre, Papier, Ciseaux
+                </Text>
+                <Text style={styles.menuButtonDesc}>
+                  Défiez l'ordinateur dans ce jeu classique
+                </Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.menuButton, { borderLeftColor: '#2ecc71' }]}
-              onPress={() => navigation.navigate('SnakeGame')}
-            >
+              style={[styles.menuButton, {borderLeftColor: '#2ecc71'}]}
+              onPress={() => navigation.navigate('SnakeGame')}>
               <Text style={styles.menuButtonEmoji}>🐍</Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Snake Game</Text>
-                <Text style={styles.menuButtonDesc}>Mangez les fruits et évitez les murs</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Mangez les fruits et évitez les murs
+                </Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.menuButton, { borderLeftColor: '#e74c3c' }]}
-              onPress={() => navigation.navigate('PongGame')}
-            >
+              style={[styles.menuButton, {borderLeftColor: '#e74c3c'}]}
+              onPress={() => navigation.navigate('PongGame')}>
               <Text style={styles.menuButtonEmoji}>🏓</Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Pong Classic</Text>
-                <Text style={styles.menuButtonDesc}>Le jeu légendaire des consoles rétro</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Le jeu légendaire des consoles rétro
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity
             style={styles.aboutButton}
-            onPress={() => setIsAboutModalVisible(true)}
-          >
+            onPress={() => setIsAboutModalVisible(true)}>
             <Text style={styles.aboutButtonText}>ℹ️ À Propos</Text>
           </TouchableOpacity>
 
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFD700', // Gold retro color
     textShadowColor: 'rgba(255, 215, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 4 },
+    textShadowOffset: {width: 0, height: 4},
     textShadowRadius: 10,
     textAlign: 'center',
     letterSpacing: 1.5,
@@ -124,7 +135,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 3,

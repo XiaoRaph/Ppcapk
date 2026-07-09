@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+const {width: windowWidth, height: windowHeight} = Dimensions.get('window');
 
 // Game coordinate system
 const BOARD_WIDTH = 300;
@@ -25,12 +25,12 @@ const BALL_SIZE = 10;
 const SCALE = Math.min(
   (windowWidth - 40) / BOARD_WIDTH,
   (windowHeight - 320) / BOARD_HEIGHT,
-  1.3
+  1.3,
 );
 const ACTUAL_BOARD_WIDTH = BOARD_WIDTH * SCALE;
 const ACTUAL_BOARD_HEIGHT = BOARD_HEIGHT * SCALE;
 
-const PongGameScreen = ({ navigation }) => {
+const PongGameScreen = ({navigation}) => {
   // Score & Status States
   const [playerScore, setPlayerScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
@@ -38,8 +38,12 @@ const PongGameScreen = ({ navigation }) => {
   const [winner, setWinner] = useState(null);
 
   // Positions (expressed in game coordinates for perfect math, scaled in style)
-  const [playerPaddleX, setPlayerPaddleX] = useState((BOARD_WIDTH - PADDLE_WIDTH) / 2);
-  const [computerPaddleX, setComputerPaddleX] = useState((BOARD_WIDTH - PADDLE_WIDTH) / 2);
+  const [playerPaddleX, setPlayerPaddleX] = useState(
+    (BOARD_WIDTH - PADDLE_WIDTH) / 2,
+  );
+  const [computerPaddleX, setComputerPaddleX] = useState(
+    (BOARD_WIDTH - PADDLE_WIDTH) / 2,
+  );
   const [ballX, setBallX] = useState(BOARD_WIDTH / 2);
   const [ballY, setBallY] = useState(BOARD_HEIGHT / 2);
 
@@ -69,9 +73,11 @@ const PongGameScreen = ({ navigation }) => {
 
   // Handle physical keyboard input for web
   useEffect(() => {
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web') {
+      return;
+    }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         isLeftPressed.current = true;
       }
@@ -83,7 +89,7 @@ const PongGameScreen = ({ navigation }) => {
       }
     };
 
-    const handleKeyUp = (e) => {
+    const handleKeyUp = e => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         isLeftPressed.current = false;
       }
@@ -144,7 +150,9 @@ const PongGameScreen = ({ navigation }) => {
 
   // Main game ticks
   useEffect(() => {
-    if (gameStatus !== 'PLAYING') return;
+    if (gameStatus !== 'PLAYING') {
+      return;
+    }
 
     let animId;
 
@@ -156,7 +164,10 @@ const PongGameScreen = ({ navigation }) => {
         nextPlayerX = Math.max(0, playerPaddleXRef.current - paddleSpeed);
       }
       if (isRightPressed.current) {
-        nextPlayerX = Math.min(BOARD_WIDTH - PADDLE_WIDTH, playerPaddleXRef.current + paddleSpeed);
+        nextPlayerX = Math.min(
+          BOARD_WIDTH - PADDLE_WIDTH,
+          playerPaddleXRef.current + paddleSpeed,
+        );
       }
       if (nextPlayerX !== playerPaddleXRef.current) {
         setPlayerPaddleX(nextPlayerX);
@@ -171,7 +182,10 @@ const PongGameScreen = ({ navigation }) => {
       // Only track if the ball is moving towards the computer (dy < 0) or randomly
       if (ballSpeedY.current < 0 || Math.random() < 0.7) {
         if (targetCenter > aiCenter + 5) {
-          nextCompX = Math.min(BOARD_WIDTH - PADDLE_WIDTH, computerPaddleXRef.current + aiSpeed);
+          nextCompX = Math.min(
+            BOARD_WIDTH - PADDLE_WIDTH,
+            computerPaddleXRef.current + aiSpeed,
+          );
         } else if (targetCenter < aiCenter - 5) {
           nextCompX = Math.max(0, computerPaddleXRef.current - aiSpeed);
         }
@@ -208,7 +222,8 @@ const PongGameScreen = ({ navigation }) => {
 
         if (nextBallX + BALL_SIZE >= paddleLeft && nextBallX <= paddleRight) {
           // Hit detected! Calculate reflection angle depending on where it hit the paddle
-          const hitPoint = (nextBallX + BALL_SIZE / 2 - paddleLeft) / PADDLE_WIDTH; // 0 to 1
+          const hitPoint =
+            (nextBallX + BALL_SIZE / 2 - paddleLeft) / PADDLE_WIDTH; // 0 to 1
           const angle = (hitPoint - 0.5) * 2; // -1 (left edge) to 1 (right edge)
 
           ballSpeedY.current = -Math.abs(ballSpeedY.current);
@@ -237,7 +252,8 @@ const PongGameScreen = ({ navigation }) => {
 
         if (nextBallX + BALL_SIZE >= paddleLeft && nextBallX <= paddleRight) {
           // Hit detected!
-          const hitPoint = (nextBallX + BALL_SIZE / 2 - paddleLeft) / PADDLE_WIDTH;
+          const hitPoint =
+            (nextBallX + BALL_SIZE / 2 - paddleLeft) / PADDLE_WIDTH;
           const angle = (hitPoint - 0.5) * 2;
 
           ballSpeedY.current = Math.abs(ballSpeedY.current);
@@ -256,7 +272,7 @@ const PongGameScreen = ({ navigation }) => {
       // 7. Point Scored / Missed Paddle
       if (nextBallY <= 0) {
         // Player scores!
-        setPlayerScore((prev) => {
+        setPlayerScore(prev => {
           const newScore = prev + 1;
           if (newScore >= 5) {
             setWinner('JOUEUR');
@@ -271,7 +287,7 @@ const PongGameScreen = ({ navigation }) => {
         return;
       } else if (nextBallY >= BOARD_HEIGHT) {
         // Computer scores!
-        setComputerScore((prev) => {
+        setComputerScore(prev => {
           const newScore = prev + 1;
           if (newScore >= 5) {
             setWinner('ORDINATEUR');
@@ -306,11 +322,13 @@ const PongGameScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
             <Text style={styles.backButtonText}>📴 Menu</Text>
           </TouchableOpacity>
           <Text style={styles.title}>PONG RETRO</Text>
-          <View style={{ width: 60 }} />
+          <View style={{width: 60}} />
         </View>
 
         {/* Scoreboard */}
@@ -334,11 +352,10 @@ const PongGameScreen = ({ navigation }) => {
               height: ACTUAL_BOARD_HEIGHT,
               backgroundColor: flashActive ? '#113311' : '#000000',
             },
-          ]}
-        >
+          ]}>
           {/* Centered dashed line */}
           <View style={styles.dashedLineContainer}>
-            {Array.from({ length: 15 }).map((_, i) => (
+            {Array.from({length: 15}).map((_, i) => (
               <View key={i} style={styles.dash} />
             ))}
           </View>
@@ -405,10 +422,16 @@ const PongGameScreen = ({ navigation }) => {
 
           {gameStatus === 'GAME_OVER' && (
             <View style={styles.boardOverlay}>
-              <Text style={[styles.overlayTitle, { color: winner === 'JOUEUR' ? '#2ecc71' : '#e74c3c' }]}>
+              <Text
+                style={[
+                  styles.overlayTitle,
+                  {color: winner === 'JOUEUR' ? '#2ecc71' : '#e74c3c'},
+                ]}>
                 {winner === 'JOUEUR' ? 'VICTOIRE !' : 'DEFAITE !'}
               </Text>
-              <Text style={styles.overlaySub}>Le score est de {playerScore} - {computerScore}</Text>
+              <Text style={styles.overlaySub}>
+                Le score est de {playerScore} - {computerScore}
+              </Text>
               <TouchableOpacity style={styles.startButton} onPress={resetGame}>
                 <Text style={styles.startButtonText}>REJOUER</Text>
               </TouchableOpacity>
@@ -419,7 +442,9 @@ const PongGameScreen = ({ navigation }) => {
         {/* Retro Controls Area */}
         <View style={styles.controlsContainer}>
           <Text style={styles.controlHint}>
-            {Platform.OS === 'web' ? 'Utilisez ⬅️ ➡️ ou A/D pour jouer' : 'Touchez pour déplacer le paddle'}
+            {Platform.OS === 'web'
+              ? 'Utilisez ⬅️ ➡️ ou A/D pour jouer'
+              : 'Touchez pour déplacer le paddle'}
           </Text>
           <View style={styles.buttonRow}>
             <TouchableOpacity
@@ -429,15 +454,13 @@ const PongGameScreen = ({ navigation }) => {
               }}
               onPressOut={() => {
                 isLeftPressed.current = false;
-              }}
-            >
+              }}>
               <Text style={styles.gameControlText}>◀</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.gameControlButton, styles.resetButton]}
-              onPress={resetGame}
-            >
+              onPress={resetGame}>
               <Text style={styles.resetButtonText}>RESET</Text>
             </TouchableOpacity>
 
@@ -448,8 +471,7 @@ const PongGameScreen = ({ navigation }) => {
               }}
               onPressOut={() => {
                 isRightPressed.current = false;
-              }}
-            >
+              }}>
               <Text style={styles.gameControlText}>▶</Text>
             </TouchableOpacity>
           </View>
@@ -494,7 +516,7 @@ const styles = StyleSheet.create({
     color: '#00ff66',
     letterSpacing: 2,
     textShadowColor: 'rgba(0, 255, 102, 0.4)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 6,
   },
   scoreContainer: {
@@ -533,7 +555,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     shadowColor: '#33ff33',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.25,
     shadowRadius: 10,
   },
@@ -558,7 +580,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00ff66',
     borderRadius: 4,
     shadowColor: '#00ff66',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.8,
     shadowRadius: 4,
   },
@@ -574,7 +596,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#FFF',
     shadowColor: '#FFF',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
@@ -609,7 +631,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 25,
     shadowColor: '#33ff33',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.4,
     shadowRadius: 8,
   },

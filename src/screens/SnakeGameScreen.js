@@ -1,30 +1,46 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Alert } from 'react-native';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions,
+  Alert,
+} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const GRID_SIZE = 10;
 // Calculate cell size based on screen dimensions, ensuring a minimum size and avoiding negative values
 const CELL_SIZE = Math.max(
   Math.floor(Math.min(width - 40, height - 420) / GRID_SIZE),
-  10
+  10,
 );
-const INITIAL_SNAKE = [{ x: 5, y: 5 }, { x: 5, y: 6 }, { x: 5, y: 7 }];
-const INITIAL_DIRECTION = { x: 0, y: -1 };
+const INITIAL_SNAKE = [
+  {x: 5, y: 5},
+  {x: 5, y: 6},
+  {x: 5, y: 7},
+];
+const INITIAL_DIRECTION = {x: 0, y: -1};
 
-const getRandomFood = (snake) => {
+const getRandomFood = snake => {
   let newFood;
   while (true) {
     newFood = {
       x: Math.floor(Math.random() * GRID_SIZE),
       y: Math.floor(Math.random() * GRID_SIZE),
     };
-    const isOccupied = snake.some(segment => segment.x === newFood.x && segment.y === newFood.y);
-    if (!isOccupied) break;
+    const isOccupied = snake.some(
+      segment => segment.x === newFood.x && segment.y === newFood.y,
+    );
+    if (!isOccupied) {
+      break;
+    }
   }
   return newFood;
 };
 
-const SnakeGameScreen = ({ navigation }) => {
+const SnakeGameScreen = ({navigation}) => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [food, setFood] = useState(getRandomFood(INITIAL_SNAKE));
@@ -41,7 +57,7 @@ const SnakeGameScreen = ({ navigation }) => {
   };
 
   const moveSnake = useCallback(() => {
-    setSnake((prevSnake) => {
+    setSnake(prevSnake => {
       const head = prevSnake[0];
       const newHead = {
         x: head.x + direction.x,
@@ -60,7 +76,11 @@ const SnakeGameScreen = ({ navigation }) => {
       }
 
       // Collision Detection: Self
-      if (prevSnake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
+      if (
+        prevSnake.some(
+          segment => segment.x === newHead.x && segment.y === newHead.y,
+        )
+      ) {
         setIsGameOver(true);
         return prevSnake;
       }
@@ -69,7 +89,7 @@ const SnakeGameScreen = ({ navigation }) => {
 
       // Eating Food
       if (newHead.x === food.x && newHead.y === food.y) {
-        setScore((prevScore) => prevScore + 1);
+        setScore(prevScore => prevScore + 1);
         setFood(getRandomFood(newSnake));
       } else {
         newSnake.pop();
@@ -85,14 +105,14 @@ const SnakeGameScreen = ({ navigation }) => {
     } else {
       clearInterval(gameInterval.current);
       Alert.alert('Game Over', `Your score: ${score}`, [
-        { text: 'Restart', onPress: resetGame },
-        { text: 'Menu', onPress: () => navigation.goBack() }
+        {text: 'Restart', onPress: resetGame},
+        {text: 'Menu', onPress: () => navigation.goBack()},
       ]);
     }
     return () => clearInterval(gameInterval.current);
   }, [moveSnake, isGameOver, score, navigation]);
 
-  const handleDirectionChange = (newDirection) => {
+  const handleDirectionChange = newDirection => {
     // Prevent 180 degree turns
     if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
       setDirection(newDirection);
@@ -112,8 +132,8 @@ const SnakeGameScreen = ({ navigation }) => {
               style={[
                 styles.cell,
                 styles.snakeSegment,
-                { left: segment.x * CELL_SIZE, top: segment.y * CELL_SIZE },
-                index === 0 ? styles.snakeHead : {}
+                {left: segment.x * CELL_SIZE, top: segment.y * CELL_SIZE},
+                index === 0 ? styles.snakeHead : {},
               ]}
             />
           ))}
@@ -121,7 +141,7 @@ const SnakeGameScreen = ({ navigation }) => {
             style={[
               styles.cell,
               styles.food,
-              { left: food.x * CELL_SIZE, top: food.y * CELL_SIZE }
+              {left: food.x * CELL_SIZE, top: food.y * CELL_SIZE},
             ]}
           />
         </View>
@@ -130,36 +150,31 @@ const SnakeGameScreen = ({ navigation }) => {
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({ x: 0, y: -1 })}
-            >
+              onPress={() => handleDirectionChange({x: 0, y: -1})}>
               <Text style={styles.controlText}>↑</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({ x: -1, y: 0 })}
-            >
+              onPress={() => handleDirectionChange({x: -1, y: 0})}>
               <Text style={styles.controlText}>←</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.controlButton, { backgroundColor: '#e74c3c' }]}
-              onPress={resetGame}
-            >
+              style={[styles.controlButton, {backgroundColor: '#e74c3c'}]}
+              onPress={resetGame}>
               <Text style={styles.controlText}>R</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({ x: 1, y: 0 })}
-            >
+              onPress={() => handleDirectionChange({x: 1, y: 0})}>
               <Text style={styles.controlText}>→</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({ x: 0, y: 1 })}
-            >
+              onPress={() => handleDirectionChange({x: 0, y: 1})}>
               <Text style={styles.controlText}>↓</Text>
             </TouchableOpacity>
           </View>
@@ -167,8 +182,7 @@ const SnakeGameScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>Retour</Text>
         </TouchableOpacity>
       </View>

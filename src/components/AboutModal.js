@@ -2,12 +2,20 @@
 // Version corrigée et nettoyée
 
 import React from 'react';
-import { Modal, Text, View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  Modal,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 
 // Le contenu est directement dans le fichier pour plus de simplicité.
-const aboutTextContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
+const aboutTextContent =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
-const AboutModal = ({ visible, onClose }) => {
+const AboutModal = ({visible, onClose}) => {
   return (
     <Modal
       animationType="slide"
@@ -23,8 +31,7 @@ const AboutModal = ({ visible, onClose }) => {
           </ScrollView>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={onClose}
-          >
+            onPress={onClose}>
             <Text style={styles.textStyle}>Fermer</Text>
           </TouchableOpacity>
         </View>
