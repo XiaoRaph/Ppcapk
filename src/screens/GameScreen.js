@@ -77,15 +77,17 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
           >
             <View style={styles.menuModalView}>
               <Text style={styles.menuModalTitle}>Menu</Text>
+
               <TouchableOpacity
-                style={styles.menuButtonOption}
+                style={[styles.menuButtonOption, { backgroundColor: '#FFD700' }]}
                 onPress={() => {
                   setIsMenuVisible(false);
-                  setIsAboutModalVisible(true);
+                  navigation.goBack();
                 }}
               >
-                <Text style={styles.menuButtonOptionText}>À Propos</Text>
+                <Text style={[styles.menuButtonOptionText, { color: '#000' }]}>🏠 Menu Principal</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.menuButtonOption}
                 onPress={() => {
@@ -93,8 +95,29 @@ const GameScreen = ({ navigation }) => { // Added navigation prop
                   navigation.navigate('SnakeGame');
                 }}
               >
-                <Text style={styles.menuButtonOptionText}>Snake</Text>
+                <Text style={styles.menuButtonOptionText}>🐍 Snake Game</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.menuButtonOption, { backgroundColor: '#e74c3c' }]}
+                onPress={() => {
+                  setIsMenuVisible(false);
+                  navigation.navigate('PongGame');
+                }}
+              >
+                <Text style={styles.menuButtonOptionText}>🏓 Pong Classic</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.menuButtonOption, { backgroundColor: '#6c757d' }]}
+                onPress={() => {
+                  setIsMenuVisible(false);
+                  setIsAboutModalVisible(true);
+                }}
+              >
+                <Text style={styles.menuButtonOptionText}>ℹ️ À Propos</Text>
+              </TouchableOpacity>
+
               <TouchableOpacity
                 style={[styles.menuButtonOption, styles.menuCloseButton]}
                 onPress={() => setIsMenuVisible(false)}
