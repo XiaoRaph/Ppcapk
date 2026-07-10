@@ -125,6 +125,26 @@ const MenuScreen = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#FFD700'}]}
+              onPress={() => navigation.navigate('SlopLocalGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Slop Local Game"
+              accessibilityHint="Rejoignez le marché local des builders d'IA !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🥕
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Slop Local Game</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Rejoignez le marché local des builders d'IA !
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity
