@@ -73,6 +73,18 @@ const MenuScreen = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#39ff14'}]}
+              onPress={() => navigation.navigate('BobbyTablesGame')}>
+              <Text style={styles.menuButtonEmoji}>🧑‍💻</Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Little Bobby Tables</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Assemblez l'injection SQL et détruisez la table !
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity
