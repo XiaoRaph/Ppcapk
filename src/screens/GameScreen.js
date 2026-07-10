@@ -125,6 +125,15 @@ const GameScreen = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
+                style={[styles.menuButtonOption, {backgroundColor: '#39ff14'}]}
+                onPress={() => {
+                  setIsMenuVisible(false);
+                  navigation.navigate('BobbyTablesGame');
+                }}>
+                <Text style={[styles.menuButtonOptionText, {color: '#000'}]}>🧑‍💻 Bobby Tables</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={[styles.menuButtonOption, {backgroundColor: '#6c757d'}]}
                 onPress={() => {
                   setIsMenuVisible(false);
