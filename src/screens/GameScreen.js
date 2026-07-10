@@ -130,7 +130,9 @@ const GameScreen = ({navigation}) => {
                   setIsMenuVisible(false);
                   navigation.navigate('BobbyTablesGame');
                 }}>
-                <Text style={[styles.menuButtonOptionText, {color: '#000'}]}>🧑‍💻 Bobby Tables</Text>
+                <Text style={[styles.menuButtonOptionText, {color: '#000'}]}>
+                  🧑‍💻 Bobby Tables
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity

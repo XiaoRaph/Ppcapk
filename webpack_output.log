@@ -1,0 +1,23 @@
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:3000/, http://[::1]:3000/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.0.2:3000/
+<i> [webpack-dev-server] Content not from webpack is served from '/app/public' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+asset bundle.web.js 4.64 MiB [emitted] (name: main)
+asset index.html 732 bytes [emitted]
+runtime modules 29 KiB 13 modules
+orphan modules 234 bytes [orphan] 1 module
+modules by path ./node_modules/ 3.42 MiB 601 modules
+modules by path ./src/ 110 KiB
+  ./src/screens/MenuScreen.js 10.6 KiB [built] [code generated]
+  ./src/screens/GameScreen.js 13.8 KiB [built] [code generated]
+  ./src/screens/SnakeGameScreen.js 9.47 KiB [built] [code generated]
+  ./src/screens/PongGameScreen.js 19.2 KiB [built] [code generated]
+  ./src/screens/TetrisGameScreen.js 22.5 KiB [built] [code generated]
+  + 2 modules
+modules by path ./*.js 3.67 KiB
+  ./index.web.js 486 bytes [built] [code generated]
+  ./App.js 3.19 KiB [built] [code generated]
+./app.json 50 bytes [built] [code generated]
+./assets/images/play_store_512.png 340 KiB [built] [code generated]
+webpack 5.108.4 compiled successfully in 16427 ms
