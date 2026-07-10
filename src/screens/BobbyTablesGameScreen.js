@@ -31,16 +31,36 @@ const REQUIRED_PARTS = [
 ];
 
 const HAZARDS = [
-  {type: 'waf', label: '🛡️ WAF', name: 'Web Application Firewall', desc: 'Bloque la requête'},
-  {type: 'sanitize', label: '🧼 SANITIZE', name: 'Input Cleaner', desc: 'Nettoie les caractères spéciaux'},
-  {type: 'prep', label: '🔒 PREP_STMT', name: 'Prepared Statement', desc: 'Paramètre les variables de requête'},
+  {
+    type: 'waf',
+    label: '🛡️ WAF',
+    name: 'Web Application Firewall',
+    desc: 'Bloque la requête',
+  },
+  {
+    type: 'sanitize',
+    label: '🧼 SANITIZE',
+    name: 'Input Cleaner',
+    desc: 'Nettoie les caractères spéciaux',
+  },
+  {
+    type: 'prep',
+    label: '🔒 PREP_STMT',
+    name: 'Prepared Statement',
+    desc: 'Paramètre les variables de requête',
+  },
 ];
 
 const MOCK_STUDENTS = [
   {id: 1, name: 'Alice', grade: 'A+', comment: 'Excellent travail'},
   {id: 2, name: 'Bob', grade: 'B', comment: 'Bonne participation'},
   {id: 3, name: 'Charlie', grade: 'A', comment: 'Très motivé'},
-  {id: 4, name: "Robert'); DROP TABLE Students; --", grade: 'A+', comment: 'Inscrit par maman'},
+  {
+    id: 4,
+    name: "Robert'); DROP TABLE Students; --",
+    grade: 'A+',
+    comment: 'Inscrit par maman',
+  },
 ];
 
 const BobbyTablesGameScreen = ({navigation}) => {
@@ -48,11 +68,19 @@ const BobbyTablesGameScreen = ({navigation}) => {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [gameStatus, setGameStatus] = useState('READY'); // READY, PLAYING, DROPPING, VICTORY, GAME_OVER
-  const [collectedParts, setCollectedParts] = useState([false, false, false, false, false]);
+  const [collectedParts, setCollectedParts] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [students, setStudents] = useState(MOCK_STUDENTS);
 
   // Position and dynamic states
-  const [characterX, setCharacterX] = useState(BOARD_WIDTH / 2 - CHAR_WIDTH / 2);
+  const [characterX, setCharacterX] = useState(
+    BOARD_WIDTH / 2 - CHAR_WIDTH / 2,
+  );
   const [characterExpression, setCharacterExpression] = useState('🧑‍💻');
   const [isStunned, setIsStunned] = useState(false);
   const [fallingItems, setFallingItems] = useState([]);
@@ -81,7 +109,11 @@ const BobbyTablesGameScreen = ({navigation}) => {
   // Character Idle Animation (Bouncing rhythm)
   useEffect(() => {
     let animation;
-    if (gameStatus === 'PLAYING' || gameStatus === 'READY' || gameStatus === 'VICTORY') {
+    if (
+      gameStatus === 'PLAYING' ||
+      gameStatus === 'READY' ||
+      gameStatus === 'VICTORY'
+    ) {
       animation = Animated.loop(
         Animated.sequence([
           Animated.timing(bounceAnim, {
@@ -94,7 +126,7 @@ const BobbyTablesGameScreen = ({navigation}) => {
             duration: 450,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
       animation.start();
     } else {
@@ -138,7 +170,9 @@ const BobbyTablesGameScreen = ({navigation}) => {
     // Input validation
     const allowedDirections = ['left', 'right'];
     if (!allowedDirections.includes(direction)) {
-      console.warn(`[Sentinel] Action bloquée : direction invalide "${direction}"`);
+      console.warn(
+        `[Sentinel] Action bloquée : direction invalide "${direction}"`,
+      );
       return;
     }
 
@@ -160,16 +194,36 @@ const BobbyTablesGameScreen = ({navigation}) => {
   // Screen shake animation on errors/hazards
   const triggerScreenShake = () => {
     Animated.sequence([
-      Animated.timing(shakeAnim, {toValue: 12, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: -12, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: 8, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: -8, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: 0, duration: 40, useNativeDriver: true}),
+      Animated.timing(shakeAnim, {
+        toValue: 12,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -12,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 8,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -8,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 40,
+        useNativeDriver: true,
+      }),
     ]).start();
   };
 
   // Reset/Restart actions with input validation (Sentinel alignment)
-  const handleGameAction = (action) => {
+  const handleGameAction = action => {
     const allowedActions = ['start', 'restart', 'menu'];
     if (!allowedActions.includes(action)) {
       console.warn(`[Sentinel] Action de jeu non autorisée : "${action}"`);
@@ -233,8 +287,11 @@ const BobbyTablesGameScreen = ({navigation}) => {
     };
 
     addLog('> Concaténation de la requête SQL...', 200);
-    addLog(`> Requête : SELECT * FROM Students WHERE Name = 'Robert'); DROP TABLE Students; --';`, 800);
-    addLog('> Envoi au serveur de la base de données de l\'école...', 1500);
+    addLog(
+      "> Requête : SELECT * FROM Students WHERE Name = 'Robert'); DROP TABLE Students; --';",
+      800,
+    );
+    addLog("> Envoi au serveur de la base de données de l'école...", 1500);
     addLog('⚠️ ALERTE : INJECTION SQL DÉTECTÉE !', 2200);
     addLog('> Commande reconnue : DROP TABLE Students;', 2800);
     addLog('> Supression de la table en cours...', 3300);
@@ -388,9 +445,9 @@ const BobbyTablesGameScreen = ({navigation}) => {
   }, [gameStatus]);
 
   // Handle collisions (Sentinel validated)
-  const handleCollision = (item) => {
+  const handleCollision = item => {
     if (!item || typeof item !== 'object') {
-      console.warn('[Sentinel] Paramètre d\'item de collision invalide');
+      console.warn("[Sentinel] Paramètre d'item de collision invalide");
       return;
     }
 
@@ -436,8 +493,8 @@ const BobbyTablesGameScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Animated.View style={[styles.container, {transform: [{translateX: shakeAnim}]}]}>
-
+      <Animated.View
+        style={[styles.container, {transform: [{translateX: shakeAnim}]}]}>
         {/* Header bar */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -453,7 +510,8 @@ const BobbyTablesGameScreen = ({navigation}) => {
         <View style={styles.introCard}>
           <Text style={styles.introTitle}>🚨 SQL INJECTION ARCADE</Text>
           <Text style={styles.introSubtitle}>
-            Aidez Bobby Tables à compiler son injection SQL pour faire un "DROP TABLE" sur la base d'école ! Évitez les filtres de sécurité.
+            Aidez Bobby Tables à compiler son injection SQL pour faire un "DROP
+            TABLE" sur la base d'école ! Évitez les filtres de sécurité.
           </Text>
         </View>
 
@@ -482,9 +540,15 @@ const BobbyTablesGameScreen = ({navigation}) => {
                   key={part.id}
                   style={[
                     styles.partTag,
-                    isCollected ? styles.partTagCollected : styles.partTagMissing,
+                    isCollected
+                      ? styles.partTagCollected
+                      : styles.partTagMissing,
                   ]}>
-                  <Text style={[styles.partTagText, isCollected ? styles.partTagTextCollected : {}]}>
+                  <Text
+                    style={[
+                      styles.partTagText,
+                      isCollected ? styles.partTagTextCollected : {},
+                    ]}>
                     {part.label}
                   </Text>
                 </View>
@@ -495,15 +559,23 @@ const BobbyTablesGameScreen = ({navigation}) => {
 
         {/* GAME SCREEN GRID */}
         <View style={styles.gameContainer}>
-
           {/* Visual Database Board */}
           <View style={styles.dbBoard}>
             <Text style={styles.dbHeader}>🗄️ TABLE: Students (SchoolDB)</Text>
             <View style={styles.dbTable}>
               <View style={styles.dbTableHeader}>
-                <Text style={[styles.dbCell, styles.dbCellHeader, {width: '15%'}]}>ID</Text>
-                <Text style={[styles.dbCell, styles.dbCellHeader, {width: '55%'}]}>Nom de l'étudiant</Text>
-                <Text style={[styles.dbCell, styles.dbCellHeader, {width: '30%'}]}>Moyenne</Text>
+                <Text
+                  style={[styles.dbCell, styles.dbCellHeader, {width: '15%'}]}>
+                  ID
+                </Text>
+                <Text
+                  style={[styles.dbCell, styles.dbCellHeader, {width: '55%'}]}>
+                  Nom de l'étudiant
+                </Text>
+                <Text
+                  style={[styles.dbCell, styles.dbCellHeader, {width: '30%'}]}>
+                  Moyenne
+                </Text>
               </View>
 
               {MOCK_STUDENTS.map((student, idx) => {
@@ -519,13 +591,24 @@ const BobbyTablesGameScreen = ({navigation}) => {
                         transform: [{scale: anim.scale}],
                       },
                     ]}>
-                    <Text style={[styles.dbCell, {width: '15%'}]}>{student.id}</Text>
+                    <Text style={[styles.dbCell, {width: '15%'}]}>
+                      {student.id}
+                    </Text>
                     <Text
-                      style={[styles.dbCell, {width: '55%', fontWeight: idx === 3 ? 'bold' : 'normal', color: idx === 3 ? '#e74c3c' : '#ffffff'}]}
+                      style={[
+                        styles.dbCell,
+                        {
+                          width: '55%',
+                          fontWeight: idx === 3 ? 'bold' : 'normal',
+                          color: idx === 3 ? '#e74c3c' : '#ffffff',
+                        },
+                      ]}
                       numberOfLines={1}>
                       {student.name}
                     </Text>
-                    <Text style={[styles.dbCell, {width: '30%'}]}>{student.grade}</Text>
+                    <Text style={[styles.dbCell, {width: '30%'}]}>
+                      {student.grade}
+                    </Text>
                   </Animated.View>
                 );
               })}
@@ -533,8 +616,8 @@ const BobbyTablesGameScreen = ({navigation}) => {
           </View>
 
           {/* ACTIVE PLAYING FIELD */}
-          <View style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
-
+          <View
+            style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
             {/* Grid scanlines effect */}
             <View style={styles.scanlines} pointerEvents="none" />
 
@@ -547,8 +630,12 @@ const BobbyTablesGameScreen = ({navigation}) => {
                   {
                     left: item.x,
                     top: item.y,
-                    backgroundColor: item.type.startsWith('hazard_') ? '#cf1717' : '#00aa00',
-                    borderColor: item.type.startsWith('hazard_') ? '#ff6b6b' : '#39ff14',
+                    backgroundColor: item.type.startsWith('hazard_')
+                      ? '#cf1717'
+                      : '#00aa00',
+                    borderColor: item.type.startsWith('hazard_')
+                      ? '#ff6b6b'
+                      : '#39ff14',
                   },
                 ]}>
                 <Text style={styles.itemText} numberOfLines={1}>
@@ -563,12 +650,14 @@ const BobbyTablesGameScreen = ({navigation}) => {
                 styles.character,
                 {
                   left: characterX,
-                  transform: [
-                    {translateY: bounceAnim},
-                  ],
+                  transform: [{translateY: bounceAnim}],
                 },
               ]}>
-              <View style={[styles.characterAvatar, isStunned ? styles.characterAvatarStunned : {}]}>
+              <View
+                style={[
+                  styles.characterAvatar,
+                  isStunned ? styles.characterAvatarStunned : {},
+                ]}>
                 <Text style={styles.characterEmoji}>{characterExpression}</Text>
                 <Text style={styles.characterName}>Bobby</Text>
               </View>
@@ -579,7 +668,9 @@ const BobbyTablesGameScreen = ({navigation}) => {
               <View style={styles.boardOverlay}>
                 <Text style={styles.overlayTextTitle}>PRÊT À INJECTER ?</Text>
                 <Text style={styles.overlayTextSubtitle}>
-                  Attrapez les fragments de code vert fluo pour composer la requête SQL destructrice ! Évitez les filtres de sécurité rouges (WAF/Sanitizer).
+                  Attrapez les fragments de code vert fluo pour composer la
+                  requête SQL destructrice ! Évitez les filtres de sécurité
+                  rouges (WAF/Sanitizer).
                 </Text>
                 <TouchableOpacity
                   style={styles.actionButton}
@@ -591,8 +682,14 @@ const BobbyTablesGameScreen = ({navigation}) => {
 
             {/* Overlay for DROPPING TABLE simulation */}
             {gameStatus === 'DROPPING' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(0,0,0,0.92)'}]}>
-                <Text style={styles.alertTextTitle}>⚠️ INJECTION SQL EN COURS...</Text>
+              <View
+                style={[
+                  styles.boardOverlay,
+                  {backgroundColor: 'rgba(0,0,0,0.92)'},
+                ]}>
+                <Text style={styles.alertTextTitle}>
+                  ⚠️ INJECTION SQL EN COURS...
+                </Text>
                 <View style={styles.terminalContainer}>
                   {terminalLogs.map((log, i) => (
                     <Text
@@ -600,7 +697,9 @@ const BobbyTablesGameScreen = ({navigation}) => {
                       style={[
                         styles.terminalLine,
                         log.startsWith('⚠️') ? styles.terminalLineAlert : {},
-                        log.includes('succès') ? styles.terminalLineSuccess : {},
+                        log.includes('succès')
+                          ? styles.terminalLineSuccess
+                          : {},
                       ]}>
                       {log}
                     </Text>
@@ -611,17 +710,24 @@ const BobbyTablesGameScreen = ({navigation}) => {
 
             {/* Overlay for VICTORY screen */}
             {gameStatus === 'VICTORY' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(5,20,5,0.95)'}]}>
+              <View
+                style={[
+                  styles.boardOverlay,
+                  {backgroundColor: 'rgba(5,20,5,0.95)'},
+                ]}>
                 <Text style={styles.victoryEmoji}>🏆</Text>
                 <Text style={styles.victoryTitle}>TABLE DESTRUITE !</Text>
                 <Text style={styles.victoryMessage}>
-                  "Et j'espère que vous avez appris à assainir vos entrées de base de données !"
+                  "Et j'espère que vous avez appris à assainir vos entrées de
+                  base de données !"
                 </Text>
                 <Text style={styles.scoreSum}>Score final : {score} XP</Text>
                 <TouchableOpacity
                   style={[styles.actionButton, {backgroundColor: '#39ff14'}]}
                   onPress={() => handleGameAction('restart')}>
-                  <Text style={[styles.actionButtonText, {color: '#000'}]}>REJOUER</Text>
+                  <Text style={[styles.actionButtonText, {color: '#000'}]}>
+                    REJOUER
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -630,9 +736,12 @@ const BobbyTablesGameScreen = ({navigation}) => {
             {gameStatus === 'GAME_OVER' && (
               <View style={styles.boardOverlay}>
                 <Text style={styles.gameOverEmoji}>💀</Text>
-                <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>HACKING ÉCHOUÉ</Text>
+                <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>
+                  HACKING ÉCHOUÉ
+                </Text>
                 <Text style={styles.overlayTextSubtitle}>
-                  La sécurité informatique a assaini vos requêtes ! Bobby a été bloqué par les administrateurs réseau.
+                  La sécurité informatique a assaini vos requêtes ! Bobby a été
+                  bloqué par les administrateurs réseau.
                 </Text>
                 <TouchableOpacity
                   style={[styles.actionButton, {backgroundColor: '#ff3333'}]}
@@ -660,7 +769,6 @@ const BobbyTablesGameScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
         )}
-
       </Animated.View>
     </SafeAreaView>
   );

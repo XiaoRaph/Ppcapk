@@ -26,8 +26,16 @@ const MenuScreen = ({navigation}) => {
           <View style={styles.menuContainer}>
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#007AFF'}]}
-              onPress={() => navigation.navigate('Game')}>
-              <Text style={styles.menuButtonEmoji}>✊✌️✋</Text>
+              onPress={() => navigation.navigate('Game')}
+              accessibilityRole="button"
+              accessibilityLabel="Pierre, Papier, Ciseaux"
+              accessibilityHint="Défiez l'ordinateur dans ce jeu classique">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                ✊✌️✋
+              </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>
                   Pierre, Papier, Ciseaux
@@ -40,8 +48,16 @@ const MenuScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#2ecc71'}]}
-              onPress={() => navigation.navigate('SnakeGame')}>
-              <Text style={styles.menuButtonEmoji}>🐍</Text>
+              onPress={() => navigation.navigate('SnakeGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Snake Game"
+              accessibilityHint="Mangez les fruits et évitez les murs">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🐍
+              </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Snake Game</Text>
                 <Text style={styles.menuButtonDesc}>
@@ -52,8 +68,16 @@ const MenuScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#e74c3c'}]}
-              onPress={() => navigation.navigate('PongGame')}>
-              <Text style={styles.menuButtonEmoji}>🏓</Text>
+              onPress={() => navigation.navigate('PongGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Pong Classic"
+              accessibilityHint="Le jeu légendaire des consoles rétro">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🏓
+              </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Pong Classic</Text>
                 <Text style={styles.menuButtonDesc}>
@@ -64,8 +88,16 @@ const MenuScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#a000f0'}]}
-              onPress={() => navigation.navigate('TetrisGame')}>
-              <Text style={styles.menuButtonEmoji}>🧱</Text>
+              onPress={() => navigation.navigate('TetrisGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Tetris Rétro"
+              accessibilityHint="Empilez les blocs et complétez les lignes">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🧱
+              </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Tetris Rétro</Text>
                 <Text style={styles.menuButtonDesc}>
@@ -76,8 +108,16 @@ const MenuScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#39ff14'}]}
-              onPress={() => navigation.navigate('BobbyTablesGame')}>
-              <Text style={styles.menuButtonEmoji}>🧑‍💻</Text>
+              onPress={() => navigation.navigate('BobbyTablesGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Little Bobby Tables"
+              accessibilityHint="Assemblez l'injection SQL et détruisez la table !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🧑‍💻
+              </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>Little Bobby Tables</Text>
                 <Text style={styles.menuButtonDesc}>
@@ -89,7 +129,10 @@ const MenuScreen = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.aboutButton}
-            onPress={() => setIsAboutModalVisible(true)}>
+            onPress={() => setIsAboutModalVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel="À Propos"
+            accessibilityHint="Afficher les informations à propos de l'application">
             <Text style={styles.aboutButtonText}>ℹ️ À Propos</Text>
           </TouchableOpacity>
 

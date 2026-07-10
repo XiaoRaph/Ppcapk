@@ -191,97 +191,114 @@ const TetrisGameScreen = ({navigation}) => {
   }, [initGame]);
 
   // Lock the current piece to the board
-  const lockPiece = useCallback((piece, curBoard) => {
-    const newBoard = curBoard.map(row => [...row]);
-    let gameOverCheck = false;
+  const lockPiece = useCallback(
+    (piece, curBoard) => {
+      const newBoard = curBoard.map(row => [...row]);
+      let gameOverCheck = false;
 
-    for (let r = 0; r < piece.shape.length; r++) {
-      for (let c = 0; c < piece.shape[r].length; c++) {
-        if (piece.shape[r][c]) {
-          const boardY = piece.y + r;
-          const boardX = piece.x + c;
+      for (let r = 0; r < piece.shape.length; r++) {
+        for (let c = 0; c < piece.shape[r].length; c++) {
+          if (piece.shape[r][c]) {
+            const boardY = piece.y + r;
+            const boardX = piece.x + c;
 
-          if (boardY < 0) {
-            gameOverCheck = true;
-          } else {
-            newBoard[boardY][boardX] = piece.color;
+            if (boardY < 0) {
+              gameOverCheck = true;
+            } else {
+              newBoard[boardY][boardX] = piece.color;
+            }
           }
         }
       }
-    }
 
-    if (gameOverCheck) {
-      setIsGameOver(true);
-      return;
-    }
-
-    // Line clearing logic
-    let linesClearedThisTurn = 0;
-    const filteredBoard = newBoard.filter(row => {
-      const isFull = row.every(cell => cell !== 0);
-      if (isFull) {
-        linesClearedThisTurn++;
+      if (gameOverCheck) {
+        setIsGameOver(true);
+        return;
       }
-      return !isFull;
-    });
 
-    while (filteredBoard.length < ROWS) {
-      filteredBoard.unshift(Array(COLS).fill(0));
-    }
-
-    if (linesClearedThisTurn > 0) {
-      const scoreTable = [0, 100, 300, 500, 800];
-      const pointsEarned = scoreTable[linesClearedThisTurn] * level;
-      setScore(prev => prev + pointsEarned);
-      setLines(prev => {
-        const newLines = prev + linesClearedThisTurn;
-        const newLevel = Math.floor(newLines / 10) + 1;
-        setLevel(newLevel);
-        return newLines;
+      // Line clearing logic
+      let linesClearedThisTurn = 0;
+      const filteredBoard = newBoard.filter(row => {
+        const isFull = row.every(cell => cell !== 0);
+        if (isFull) {
+          linesClearedThisTurn++;
+        }
+        return !isFull;
       });
-    }
 
-    // Spawn next piece
-    setBoard(filteredBoard);
-    const nextType = nextPieceTypeRef.current;
-    const nextSpawnPiece = createPiece(nextType);
+      while (filteredBoard.length < ROWS) {
+        filteredBoard.unshift(Array(COLS).fill(0));
+      }
 
-    if (checkCollision(nextSpawnPiece.shape, nextSpawnPiece.x, nextSpawnPiece.y, filteredBoard)) {
-      setIsGameOver(true);
-    } else {
-      setCurrentPiece(nextSpawnPiece);
-      setNextPieceType(getRandomPieceType());
-      setHasHeld(false);
-    }
-  }, [level]);
+      if (linesClearedThisTurn > 0) {
+        const scoreTable = [0, 100, 300, 500, 800];
+        const pointsEarned = scoreTable[linesClearedThisTurn] * level;
+        setScore(prev => prev + pointsEarned);
+        setLines(prev => {
+          const newLines = prev + linesClearedThisTurn;
+          const newLevel = Math.floor(newLines / 10) + 1;
+          setLevel(newLevel);
+          return newLines;
+        });
+      }
+
+      // Spawn next piece
+      setBoard(filteredBoard);
+      const nextType = nextPieceTypeRef.current;
+      const nextSpawnPiece = createPiece(nextType);
+
+      if (
+        checkCollision(
+          nextSpawnPiece.shape,
+          nextSpawnPiece.x,
+          nextSpawnPiece.y,
+          filteredBoard,
+        )
+      ) {
+        setIsGameOver(true);
+      } else {
+        setCurrentPiece(nextSpawnPiece);
+        setNextPieceType(getRandomPieceType());
+        setHasHeld(false);
+      }
+    },
+    [level],
+  );
 
   // Move piece horizontally or down
-  const movePiece = useCallback((dx, dy) => {
-    if (isPausedRef.current || isGameOverRef.current || !currentPieceRef.current) {
+  const movePiece = useCallback(
+    (dx, dy) => {
+      if (
+        isPausedRef.current ||
+        isGameOverRef.current ||
+        !currentPieceRef.current
+      ) {
+        return false;
+      }
+
+      const piece = currentPieceRef.current;
+      const newX = piece.x + dx;
+      const newY = piece.y + dy;
+
+      if (!checkCollision(piece.shape, newX, newY, boardRef.current)) {
+        setCurrentPiece({
+          ...piece,
+          x: newX,
+          y: newY,
+        });
+        return true;
+      }
+
+      // If moving down failed, lock the piece
+      if (dy > 0) {
+        lockPiece(piece, boardRef.current);
+        return false;
+      }
+
       return false;
-    }
-
-    const piece = currentPieceRef.current;
-    const newX = piece.x + dx;
-    const newY = piece.y + dy;
-
-    if (!checkCollision(piece.shape, newX, newY, boardRef.current)) {
-      setCurrentPiece({
-        ...piece,
-        x: newX,
-        y: newY,
-      });
-      return true;
-    }
-
-    // If moving down failed, lock the piece
-    if (dy > 0) {
-      lockPiece(piece, boardRef.current);
-      return false;
-    }
-
-    return false;
-  }, [lockPiece]);
+    },
+    [lockPiece],
+  );
 
   // Game tick interval based on level speed
   useEffect(() => {
@@ -299,7 +316,12 @@ const TetrisGameScreen = ({navigation}) => {
 
   // Hold feature
   const holdPiece = useCallback(() => {
-    if (isPausedRef.current || isGameOverRef.current || hasHeldRef.current || !currentPieceRef.current) {
+    if (
+      isPausedRef.current ||
+      isGameOverRef.current ||
+      hasHeldRef.current ||
+      !currentPieceRef.current
+    ) {
       return;
     }
 
@@ -320,7 +342,11 @@ const TetrisGameScreen = ({navigation}) => {
 
   // Hard drop
   const hardDrop = useCallback(() => {
-    if (isPausedRef.current || isGameOverRef.current || !currentPieceRef.current) {
+    if (
+      isPausedRef.current ||
+      isGameOverRef.current ||
+      !currentPieceRef.current
+    ) {
       return;
     }
 
@@ -342,7 +368,11 @@ const TetrisGameScreen = ({navigation}) => {
 
   // Rotate piece
   const rotatePiece = useCallback(() => {
-    if (isPausedRef.current || isGameOverRef.current || !currentPieceRef.current) {
+    if (
+      isPausedRef.current ||
+      isGameOverRef.current ||
+      !currentPieceRef.current
+    ) {
       return;
     }
 
@@ -474,16 +504,15 @@ const TetrisGameScreen = ({navigation}) => {
           <TouchableOpacity
             style={styles.pauseButton}
             onPress={() => setIsPaused(prev => !prev)}>
-            <Text style={styles.pauseButtonText}>
-              {isPaused ? '▶️' : '⏸'}
-            </Text>
+            <Text style={styles.pauseButtonText}>{isPaused ? '▶️' : '⏸'}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Main Content Area: Board + Sidebar */}
         <View style={styles.gameArea}>
           {/* Main Play Board */}
-          <View style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
+          <View
+            style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
             {grid.map((row, rIdx) => (
               <View key={rIdx} style={styles.row}>
                 {row.map((cell, cIdx) => (
@@ -531,8 +560,12 @@ const TetrisGameScreen = ({navigation}) => {
                           style={[
                             styles.miniCell,
                             {
-                              backgroundColor: cell ? COLORS[holdPieceType] : 'transparent',
-                              borderColor: cell ? 'rgba(255,255,255,0.2)' : 'transparent',
+                              backgroundColor: cell
+                                ? COLORS[holdPieceType]
+                                : 'transparent',
+                              borderColor: cell
+                                ? 'rgba(255,255,255,0.2)'
+                                : 'transparent',
                             },
                           ]}
                         />
@@ -558,8 +591,12 @@ const TetrisGameScreen = ({navigation}) => {
                           style={[
                             styles.miniCell,
                             {
-                              backgroundColor: cell ? COLORS[nextPieceType] : 'transparent',
-                              borderColor: cell ? 'rgba(255,255,255,0.2)' : 'transparent',
+                              backgroundColor: cell
+                                ? COLORS[nextPieceType]
+                                : 'transparent',
+                              borderColor: cell
+                                ? 'rgba(255,255,255,0.2)'
+                                : 'transparent',
                             },
                           ]}
                         />
