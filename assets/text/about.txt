@@ -1,1 +1,41 @@
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+SLOP LOCAL — reclaiming “slop” as a badge of honor for indie AI builders
+
+A few weeks ago I saw a farmers market t-shirt that said “eat fresh shop local” but the H in SHOP was replaced with a carrot emoji. So it read “SLOP LOCAL.”
+
+I laughed, took a photo, and then couldn’t stop thinking about it.
+
+Because here’s the thing — “slop” has become the go-to dismissal for anything built with AI. Doesn’t matter if it’s genuinely useful. Doesn’t matter if a real person spent real time on it. Doesn’t matter if people are actually using it. If AI touched it, someone will call it slop.
+
+And I think that’s wrong.
+
+I’ve been building tools with Claude and Codex for the past year. Some of them are rough. Some of them are weird. But I spent time on them and they solved a problem for me or provided entertainment.
+
+So I built SLOP LOCAL — a community directory for free, AI-built apps that are actually good. Think of it like a digital farmers market.
+
+The idea is simple:
+- Builders submit their tools (free to list, always)
+- Community votes up what’s actually useful
+- The best stuff rises, the garbage doesn’t
+
+The criteria is tight:
+- Has to be free to use
+- Has to solve a real problem or be genuinely fun
+- Builder has to have actually put time into it — not a 5-minute throwaway
+- No SEO farms, no content mills, no scams
+
+The part I’m most excited about:
+SLOP LOCAL is agent-native from day one. Connect it to Claude Desktop via MCP and tell your agent “submit my latest project to SLOP LOCAL” — it reads your repo, writes the tagline, picks the category, and posts it. No form filling. Your agent can also browse what’s trending, find market gaps (what the community is voting for that nobody’s built yet), and check which AI tools are producing the best-received submissions. Built specifically for agents — not just an API bolted on after the fact, but designed from day one so your agent can submit, browse, and find market gaps without you touching a form. Generate your API key from your profile once you’re signed up.
+
+I seeded it with three of my own projects to get it started. Yes I built SLOP LOCAL with AI. Yes my agent submitted my own projects to it. Yes that felt extremely correct.
+
+The diff was 4,000 lines. I approved it anyway.
+
+→ sloplocal.com
+
+If you’ve built something free and useful and just needed somewhere to put it — drop it. That’t exactly what this is for.
+
+And if you think “slop” is still an insult after trying the site, fair enough. But I think we built some good stuff this year and it deserves a home.
+
+"Built local. Shipped fast. Not sorry."
+
+P.S. There’s a /start page for anyone newer to building with AI — goes from “I use ChatGPT for small tasks” all the way to agentic workflows. Free, no signup, just a guide. sloplocal.com/start

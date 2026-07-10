@@ -67,3 +67,7 @@ yarn-error.log
 
 # web build artifacts
 dist/
+
+# logs
+webpack_output.log
+webpack_dev_server.log
