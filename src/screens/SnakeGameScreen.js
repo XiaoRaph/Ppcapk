@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Dimensions,
   Alert,
+  Platform,
 } from 'react-native';
 
 const {width, height} = Dimensions.get('window');
@@ -112,12 +113,72 @@ const SnakeGameScreen = ({navigation}) => {
     return () => clearInterval(gameInterval.current);
   }, [moveSnake, isGameOver, score, navigation]);
 
-  const handleDirectionChange = newDirection => {
-    // Prevent 180 degree turns
-    if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
+  const directionRef = useRef(direction);
+  useEffect(() => {
+    directionRef.current = direction;
+  }, [direction]);
+
+  const handleDirectionChange = useCallback(newDirection => {
+    // Prevent 180 degree turns using the latest direction reference
+    if (
+      newDirection.x !== -directionRef.current.x ||
+      newDirection.y !== -directionRef.current.y
+    ) {
       setDirection(newDirection);
     }
-  };
+  }, []);
+
+  // Web physical keyboard controls
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
+    const handleKeyDown = e => {
+      if (isGameOver) {
+        if (e.key === 'r' || e.key === 'R') {
+          resetGame();
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+        case 'z':
+        case 'Z':
+          handleDirectionChange({x: 0, y: -1});
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          handleDirectionChange({x: 0, y: 1});
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+        case 'q':
+        case 'Q':
+          handleDirectionChange({x: -1, y: 0});
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          handleDirectionChange({x: 1, y: 0});
+          break;
+        case 'r':
+        case 'R':
+          resetGame();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGameOver, handleDirectionChange]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -146,35 +207,56 @@ const SnakeGameScreen = ({navigation}) => {
           />
         </View>
 
+        {Platform.OS === 'web' && (
+          <Text style={styles.controlHint}>
+            Touches fléchées, WASD/ZQSD ou R pour recommencer
+          </Text>
+        )}
+
         <View style={styles.controls}>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({x: 0, y: -1})}>
+              onPress={() => handleDirectionChange({x: 0, y: -1})}
+              accessibilityRole="button"
+              accessibilityLabel="Tourner en haut"
+              accessibilityHint="Dirige le serpent vers le haut">
               <Text style={styles.controlText}>↑</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({x: -1, y: 0})}>
+              onPress={() => handleDirectionChange({x: -1, y: 0})}
+              accessibilityRole="button"
+              accessibilityLabel="Tourner à gauche"
+              accessibilityHint="Dirige le serpent vers la gauche">
               <Text style={styles.controlText}>←</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.controlButton, {backgroundColor: '#e74c3c'}]}
-              onPress={resetGame}>
+              onPress={resetGame}
+              accessibilityRole="button"
+              accessibilityLabel="Recommencer la partie"
+              accessibilityHint="Réinitialise le score et relance le jeu">
               <Text style={styles.controlText}>R</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({x: 1, y: 0})}>
+              onPress={() => handleDirectionChange({x: 1, y: 0})}
+              accessibilityRole="button"
+              accessibilityLabel="Tourner à droite"
+              accessibilityHint="Dirige le serpent vers la droite">
               <Text style={styles.controlText}>→</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.controlButton}
-              onPress={() => handleDirectionChange({x: 0, y: 1})}>
+              onPress={() => handleDirectionChange({x: 0, y: 1})}
+              accessibilityRole="button"
+              accessibilityLabel="Tourner en bas"
+              accessibilityHint="Dirige le serpent vers le bas">
               <Text style={styles.controlText}>↓</Text>
             </TouchableOpacity>
           </View>
@@ -182,7 +264,10 @@ const SnakeGameScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Retourner au menu principal"
+          accessibilityHint="Ferme le jeu et retourne à l'écran principal">
           <Text style={styles.backButtonText}>Retour</Text>
         </TouchableOpacity>
       </View>
@@ -251,6 +336,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
     borderRadius: 10,
+  },
+  controlHint: {
+    color: '#bdc3c7',
+    fontSize: 12,
+    marginTop: 15,
+    textAlign: 'center',
+    fontWeight: '500',
   },
   controlText: {
     fontSize: 30,
