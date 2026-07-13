@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -107,17 +107,14 @@ const PongGameScreen = ({navigation}) => {
     };
   }, [gameStatus]);
 
-  const startGame = () => {
-    setGameStatus('PLAYING');
-    resetRound(true);
-  };
-
-  const triggerFlash = () => {
+  // Memoized flash trigger to avoid recreation on every render
+  const triggerFlash = useCallback(() => {
     setFlashActive(true);
     setTimeout(() => setFlashActive(false), 80);
-  };
+  }, []);
 
-  const resetRound = (isNewGameStart = false) => {
+  // Memoized reset round helper to avoid recreation and prevent stale state closures
+  const resetRound = useCallback((isNewGameStart = false) => {
     // Reset positions
     const initialPaddle = (BOARD_WIDTH - PADDLE_WIDTH) / 2;
     setPlayerPaddleX(initialPaddle);
@@ -138,15 +135,22 @@ const PongGameScreen = ({navigation}) => {
     if (!isNewGameStart) {
       setGameStatus('PLAYING');
     }
-  };
+  }, []);
 
-  const resetGame = () => {
+  // Memoized start game action handler
+  const startGame = useCallback(() => {
+    setGameStatus('PLAYING');
+    resetRound(true);
+  }, [resetRound]);
+
+  // Memoized reset game action handler
+  const resetGame = useCallback(() => {
     setPlayerScore(0);
     setComputerScore(0);
     setWinner(null);
     setGameStatus('READY');
     resetRound(true);
-  };
+  }, [resetRound]);
 
   // Main game ticks
   useEffect(() => {
@@ -318,30 +322,142 @@ const PongGameScreen = ({navigation}) => {
     };
   }, [gameStatus]);
 
+  // Performance Optimization: Memoize the game header to avoid re-renders at 60 FPS
+  const headerComponent = useMemo(() => {
+    return (
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>📴 Menu</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>PONG RETRO</Text>
+        <View style={{width: 60}} />
+      </View>
+    );
+  }, [navigation]);
+
+  // Performance Optimization: Memoize the scoreboard. It only re-renders when the score changes
+  const scoreboardComponent = useMemo(() => {
+    return (
+      <View style={styles.scoreContainer}>
+        <View style={styles.scoreBox}>
+          <Text style={styles.scoreLabel}>ORDI</Text>
+          <Text style={styles.scoreValue}>{computerScore}</Text>
+        </View>
+        <View style={styles.scoreBox}>
+          <Text style={styles.scoreLabel}>JOUEUR</Text>
+          <Text style={styles.scoreValue}>{playerScore}</Text>
+        </View>
+      </View>
+    );
+  }, [computerScore, playerScore]);
+
+  // Performance Optimization: Memoize the background dashed line to avoid recreating 15 items and Array.from every frame
+  const dashedLineComponent = useMemo(() => {
+    return (
+      <View style={styles.dashedLineContainer}>
+        {Array.from({length: 15}).map((_, i) => (
+          <View key={i} style={styles.dash} />
+        ))}
+      </View>
+    );
+  }, []);
+
+  // Performance Optimization: Memoize the overlay modals (READY, ROUND_OVER, GAME_OVER)
+  const overlayComponent = useMemo(() => {
+    if (gameStatus === 'READY') {
+      return (
+        <View style={styles.boardOverlay}>
+          <Text style={styles.overlayTitle}>PONG CLASSIC</Text>
+          <Text style={styles.overlaySub}>Premier à 5 points gagne !</Text>
+          <TouchableOpacity style={styles.startButton} onPress={startGame}>
+            <Text style={styles.startButtonText}>COMMENCER</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (gameStatus === 'ROUND_OVER') {
+      return (
+        <View style={styles.boardOverlay}>
+          <Text style={styles.overlayTitle}>BUT !</Text>
+          <Text style={styles.overlaySub}>Préparez-vous...</Text>
+        </View>
+      );
+    }
+
+    if (gameStatus === 'GAME_OVER') {
+      return (
+        <View style={styles.boardOverlay}>
+          <Text
+            style={[
+              styles.overlayTitle,
+              {color: winner === 'JOUEUR' ? '#2ecc71' : '#e74c3c'},
+            ]}>
+            {winner === 'JOUEUR' ? 'VICTOIRE !' : 'DEFAITE !'}
+          </Text>
+          <Text style={styles.overlaySub}>
+            Le score est de {playerScore} - {computerScore}
+          </Text>
+          <TouchableOpacity style={styles.startButton} onPress={resetGame}>
+            <Text style={styles.startButtonText}>REJOUER</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return null;
+  }, [gameStatus, winner, playerScore, computerScore, startGame, resetGame]);
+
+  // Performance Optimization: Memoize controls to prevent rebuilding event handlers & UI on every single 60 FPS tick
+  const controlsComponent = useMemo(() => {
+    return (
+      <View style={styles.controlsContainer}>
+        <Text style={styles.controlHint}>
+          {Platform.OS === 'web'
+            ? 'Utilisez ⬅️ ➡️ ou A/D pour jouer'
+            : 'Touchez pour déplacer le paddle'}
+        </Text>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.gameControlButton}
+            onPressIn={() => {
+              isLeftPressed.current = true;
+            }}
+            onPressOut={() => {
+              isLeftPressed.current = false;
+            }}>
+            <Text style={styles.gameControlText}>◀</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.gameControlButton, styles.resetButton]}
+            onPress={resetGame}>
+            <Text style={styles.resetButtonText}>RESET</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.gameControlButton}
+            onPressIn={() => {
+              isRightPressed.current = true;
+            }}
+            onPressOut={() => {
+              isRightPressed.current = false;
+            }}>
+            <Text style={styles.gameControlText}>▶</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }, [resetGame]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>📴 Menu</Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>PONG RETRO</Text>
-          <View style={{width: 60}} />
-        </View>
+        {headerComponent}
 
-        {/* Scoreboard */}
-        <View style={styles.scoreContainer}>
-          <View style={styles.scoreBox}>
-            <Text style={styles.scoreLabel}>ORDI</Text>
-            <Text style={styles.scoreValue}>{computerScore}</Text>
-          </View>
-          <View style={styles.scoreBox}>
-            <Text style={styles.scoreLabel}>JOUEUR</Text>
-            <Text style={styles.scoreValue}>{playerScore}</Text>
-          </View>
-        </View>
+        {scoreboardComponent}
 
         {/* The Pong Board */}
         <View
@@ -353,12 +469,7 @@ const PongGameScreen = ({navigation}) => {
               backgroundColor: flashActive ? '#113311' : '#000000',
             },
           ]}>
-          {/* Centered dashed line */}
-          <View style={styles.dashedLineContainer}>
-            {Array.from({length: 15}).map((_, i) => (
-              <View key={i} style={styles.dash} />
-            ))}
-          </View>
+          {dashedLineComponent}
 
           {/* Computer Paddle */}
           <View
@@ -402,80 +513,10 @@ const PongGameScreen = ({navigation}) => {
             ]}
           />
 
-          {/* Game Over / Ready Modals directly overlaid inside board */}
-          {gameStatus === 'READY' && (
-            <View style={styles.boardOverlay}>
-              <Text style={styles.overlayTitle}>PONG CLASSIC</Text>
-              <Text style={styles.overlaySub}>Premier à 5 points gagne !</Text>
-              <TouchableOpacity style={styles.startButton} onPress={startGame}>
-                <Text style={styles.startButtonText}>COMMENCER</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {gameStatus === 'ROUND_OVER' && (
-            <View style={styles.boardOverlay}>
-              <Text style={styles.overlayTitle}>BUT !</Text>
-              <Text style={styles.overlaySub}>Préparez-vous...</Text>
-            </View>
-          )}
-
-          {gameStatus === 'GAME_OVER' && (
-            <View style={styles.boardOverlay}>
-              <Text
-                style={[
-                  styles.overlayTitle,
-                  {color: winner === 'JOUEUR' ? '#2ecc71' : '#e74c3c'},
-                ]}>
-                {winner === 'JOUEUR' ? 'VICTOIRE !' : 'DEFAITE !'}
-              </Text>
-              <Text style={styles.overlaySub}>
-                Le score est de {playerScore} - {computerScore}
-              </Text>
-              <TouchableOpacity style={styles.startButton} onPress={resetGame}>
-                <Text style={styles.startButtonText}>REJOUER</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          {overlayComponent}
         </View>
 
-        {/* Retro Controls Area */}
-        <View style={styles.controlsContainer}>
-          <Text style={styles.controlHint}>
-            {Platform.OS === 'web'
-              ? 'Utilisez ⬅️ ➡️ ou A/D pour jouer'
-              : 'Touchez pour déplacer le paddle'}
-          </Text>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={styles.gameControlButton}
-              onPressIn={() => {
-                isLeftPressed.current = true;
-              }}
-              onPressOut={() => {
-                isLeftPressed.current = false;
-              }}>
-              <Text style={styles.gameControlText}>◀</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.gameControlButton, styles.resetButton]}
-              onPress={resetGame}>
-              <Text style={styles.resetButtonText}>RESET</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.gameControlButton}
-              onPressIn={() => {
-                isRightPressed.current = true;
-              }}
-              onPressOut={() => {
-                isRightPressed.current = false;
-              }}>
-              <Text style={styles.gameControlText}>▶</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {controlsComponent}
       </View>
     </SafeAreaView>
   );
