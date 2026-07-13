@@ -324,7 +324,10 @@ const PongGameScreen = ({navigation}) => {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.goBack()}>
+            onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel="Retour"
+            accessibilityHint="Retourne au menu principal">
             <Text style={styles.backButtonText}>📴 Menu</Text>
           </TouchableOpacity>
           <Text style={styles.title}>PONG RETRO</Text>
@@ -407,7 +410,12 @@ const PongGameScreen = ({navigation}) => {
             <View style={styles.boardOverlay}>
               <Text style={styles.overlayTitle}>PONG CLASSIC</Text>
               <Text style={styles.overlaySub}>Premier à 5 points gagne !</Text>
-              <TouchableOpacity style={styles.startButton} onPress={startGame}>
+              <TouchableOpacity
+                style={styles.startButton}
+                onPress={startGame}
+                accessibilityRole="button"
+                accessibilityLabel="Commencer la partie"
+                accessibilityHint="Démarre le jeu de Pong">
                 <Text style={styles.startButtonText}>COMMENCER</Text>
               </TouchableOpacity>
             </View>
@@ -432,7 +440,12 @@ const PongGameScreen = ({navigation}) => {
               <Text style={styles.overlaySub}>
                 Le score est de {playerScore} - {computerScore}
               </Text>
-              <TouchableOpacity style={styles.startButton} onPress={resetGame}>
+              <TouchableOpacity
+                style={styles.startButton}
+                onPress={resetGame}
+                accessibilityRole="button"
+                accessibilityLabel="Recommencer"
+                accessibilityHint="Réinitialise les scores et relance une partie">
                 <Text style={styles.startButtonText}>REJOUER</Text>
               </TouchableOpacity>
             </View>
@@ -454,13 +467,24 @@ const PongGameScreen = ({navigation}) => {
               }}
               onPressOut={() => {
                 isLeftPressed.current = false;
-              }}>
-              <Text style={styles.gameControlText}>◀</Text>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Gauche"
+              accessibilityHint="Déplace la raquette vers la gauche">
+              <Text
+                style={styles.gameControlText}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                ◀
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.gameControlButton, styles.resetButton]}
-              onPress={resetGame}>
+              onPress={resetGame}
+              accessibilityRole="button"
+              accessibilityLabel="Réinitialiser"
+              accessibilityHint="Remet les scores à zéro et réinitialise le jeu">
               <Text style={styles.resetButtonText}>RESET</Text>
             </TouchableOpacity>
 
@@ -471,8 +495,16 @@ const PongGameScreen = ({navigation}) => {
               }}
               onPressOut={() => {
                 isRightPressed.current = false;
-              }}>
-              <Text style={styles.gameControlText}>▶</Text>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Droite"
+              accessibilityHint="Déplace la raquette vers la droite">
+              <Text
+                style={styles.gameControlText}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                ▶
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -22,9 +22,9 @@ const CHOICES = [
 ];
 
 const CHOICE_EMOJIS = {
-  'Pierre': '✊',
-  'Papier': '✋',
-  'Ciseaux': '✌️',
+  Pierre: '✊',
+  Papier: '✋',
+  Ciseaux: '✌️',
 };
 
 const GameScreen = ({navigation}) => {
@@ -68,7 +68,7 @@ const GameScreen = ({navigation}) => {
     // Start shaking animation!
     setIsAnimating(true);
 
-    const singleShake = (animatedVal) => {
+    const singleShake = animatedVal => {
       return Animated.sequence([
         Animated.timing(animatedVal, {
           toValue: -30,
@@ -87,9 +87,18 @@ const GameScreen = ({navigation}) => {
 
     // Chain 3 shakes in sequence to build tension!
     Animated.sequence([
-      Animated.parallel([singleShake(playerShakeValue), singleShake(computerShakeValue)]),
-      Animated.parallel([singleShake(playerShakeValue), singleShake(computerShakeValue)]),
-      Animated.parallel([singleShake(playerShakeValue), singleShake(computerShakeValue)]),
+      Animated.parallel([
+        singleShake(playerShakeValue),
+        singleShake(computerShakeValue),
+      ]),
+      Animated.parallel([
+        singleShake(playerShakeValue),
+        singleShake(computerShakeValue),
+      ]),
+      Animated.parallel([
+        singleShake(playerShakeValue),
+        singleShake(computerShakeValue),
+      ]),
     ]).start(() => {
       // Once animation is done, show choices and update score
       setPlayerChoice(selectedChoice);
@@ -120,7 +129,9 @@ const GameScreen = ({navigation}) => {
 
   // Fonction pour réinitialiser tout le jeu
   const resetGame = () => {
-    if (isAnimating) return;
+    if (isAnimating) {
+      return;
+    }
     nextRound();
     setPlayerScore(0);
     setComputerScore(0);
@@ -234,17 +245,25 @@ const GameScreen = ({navigation}) => {
             <Animated.View
               style={[
                 styles.handContainer,
-                { transform: [{ translateY: playerShakeValue }] }
+                {transform: [{translateY: playerShakeValue}]},
               ]}>
-              <Text style={styles.handEmoji} accessibilityElementsHidden={true} importantForAccessibility="no">
+              <Text
+                style={styles.handEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
                 {isAnimating
                   ? '✊'
-                  : (playerChoice ? CHOICE_EMOJIS[playerChoice.name] : '👤')
-                }
+                  : playerChoice
+                  ? CHOICE_EMOJIS[playerChoice.name]
+                  : '👤'}
               </Text>
             </Animated.View>
             <Text style={styles.arenaChoiceName}>
-              {isAnimating ? '...' : (playerChoice ? playerChoice.name : 'En attente')}
+              {isAnimating
+                ? '...'
+                : playerChoice
+                ? playerChoice.name
+                : 'En attente'}
             </Text>
           </View>
 
@@ -259,17 +278,25 @@ const GameScreen = ({navigation}) => {
             <Animated.View
               style={[
                 styles.handContainer,
-                { transform: [{ translateY: computerShakeValue }, { scaleX: -1 }] }
+                {transform: [{translateY: computerShakeValue}, {scaleX: -1}]},
               ]}>
-              <Text style={styles.handEmoji} accessibilityElementsHidden={true} importantForAccessibility="no">
+              <Text
+                style={styles.handEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
                 {isAnimating
                   ? '✊'
-                  : (computerChoice ? CHOICE_EMOJIS[computerChoice.name] : '🤖')
-                }
+                  : computerChoice
+                  ? CHOICE_EMOJIS[computerChoice.name]
+                  : '🤖'}
               </Text>
             </Animated.View>
             <Text style={styles.arenaChoiceName}>
-              {isAnimating ? '...' : (computerChoice ? computerChoice.name : 'En attente')}
+              {isAnimating
+                ? '...'
+                : computerChoice
+                ? computerChoice.name
+                : 'En attente'}
             </Text>
           </View>
         </View>
@@ -301,12 +328,19 @@ const GameScreen = ({navigation}) => {
                 <TouchableOpacity
                   key={choice.name}
                   disabled={isAnimating}
-                  style={[styles.button, styles.choiceButton, isAnimating ? styles.disabledButton : {}]}
+                  style={[
+                    styles.button,
+                    styles.choiceButton,
+                    isAnimating ? styles.disabledButton : {},
+                  ]}
                   onPress={() => handlePlayerChoice(choice.name)}
                   accessibilityRole="button"
                   accessibilityLabel={`Choisir ${choice.name}`}
                   accessibilityHint={`Jouer ${choice.name} contre l'ordinateur`}>
-                  <Text style={styles.choiceButtonEmoji} accessibilityElementsHidden={true} importantForAccessibility="no">
+                  <Text
+                    style={styles.choiceButtonEmoji}
+                    accessibilityElementsHidden={true}
+                    importantForAccessibility="no">
                     {CHOICE_EMOJIS[choice.name]}
                   </Text>
                   <Text style={styles.buttonText}>{choice.name}</Text>

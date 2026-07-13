@@ -147,11 +147,31 @@ const SlopLocalGameScreen = ({navigation}) => {
 
   const triggerScreenShake = () => {
     Animated.sequence([
-      Animated.timing(shakeAnim, {toValue: 10, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: -10, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: 6, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: -6, duration: 40, useNativeDriver: true}),
-      Animated.timing(shakeAnim, {toValue: 0, duration: 40, useNativeDriver: true}),
+      Animated.timing(shakeAnim, {
+        toValue: 10,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -10,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 6,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -6,
+        duration: 40,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 40,
+        useNativeDriver: true,
+      }),
     ]).start();
   };
 
@@ -206,11 +226,14 @@ const SlopLocalGameScreen = ({navigation}) => {
     };
 
     addLog('> Connecté à Claude Desktop via MCP...', 200);
-    addLog('> Lecture du repository local de l\'application...', 800);
-    addLog('> Auto-génération de l\'accroche (tagline)...', 1500);
+    addLog("> Lecture du repository local de l'application...", 800);
+    addLog("> Auto-génération de l'accroche (tagline)...", 1500);
     addLog('> Choix intelligent de la catégorie : "Indie AI Game"...', 2100);
-    addLog('> Soumission de l\'application à sloplocal.com...', 2800);
-    addLog('✨ SUCCESS: Projet répertorié sur le Digital Farmers Market !', 3500);
+    addLog("> Soumission de l'application à sloplocal.com...", 2800);
+    addLog(
+      '✨ SUCCESS: Projet répertorié sur le Digital Farmers Market !',
+      3500,
+    );
 
     setTimeout(() => {
       triggerScreenShake();
@@ -238,7 +261,8 @@ const SlopLocalGameScreen = ({navigation}) => {
 
     // 65% Good items, 35% Bad items
     if (Math.random() < 0.65 && missingIndices.length > 0) {
-      const randIdx = missingIndices[Math.floor(Math.random() * missingIndices.length)];
+      const randIdx =
+        missingIndices[Math.floor(Math.random() * missingIndices.length)];
       const item = GOOD_ITEMS[randIdx];
       itemType = `feature_${item.id}`;
       label = item.label;
@@ -374,7 +398,6 @@ const SlopLocalGameScreen = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <Animated.View
         style={[styles.container, {transform: [{translateX: shakeAnim}]}]}>
-
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -390,7 +413,9 @@ const SlopLocalGameScreen = ({navigation}) => {
         <View style={styles.introCard}>
           <Text style={styles.introTitle}>🥬 DIGITAL FARMERS MARKET</Text>
           <Text style={styles.introSubtitle}>
-            Aidez l'agent de l'Indie AI Builder à collecter les bons critères d'applications (gratuites, fun, utiles, agent-native) et évitez le spam !
+            Aidez l'agent de l'Indie AI Builder à collecter les bons critères
+            d'applications (gratuites, fun, utiles, agent-native) et évitez le
+            spam !
           </Text>
         </View>
 
@@ -403,7 +428,9 @@ const SlopLocalGameScreen = ({navigation}) => {
           <View style={styles.dashBox}>
             <Text style={styles.dashLabel}>RÉPUTATION</Text>
             <Text style={styles.dashValue}>
-              {Array.from({length: 3}).map((_, i) => (i < reputation ? '🥕' : '🗑️'))}
+              {Array.from({length: 3}).map((_, i) =>
+                i < reputation ? '🥕' : '🗑️',
+              )}
             </Text>
           </View>
         </View>
@@ -419,9 +446,15 @@ const SlopLocalGameScreen = ({navigation}) => {
                   key={feat.id}
                   style={[
                     styles.featTag,
-                    isCollected ? styles.featTagCollected : styles.featTagMissing,
+                    isCollected
+                      ? styles.featTagCollected
+                      : styles.featTagMissing,
                   ]}>
-                  <Text style={[styles.featTagText, isCollected ? styles.featTagTextCollected : {}]}>
+                  <Text
+                    style={[
+                      styles.featTagText,
+                      isCollected ? styles.featTagTextCollected : {},
+                    ]}>
                     {feat.label}
                   </Text>
                 </View>
@@ -432,7 +465,8 @@ const SlopLocalGameScreen = ({navigation}) => {
 
         {/* Main Grid */}
         <View style={styles.gameContainer}>
-          <View style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
+          <View
+            style={[styles.board, {width: BOARD_WIDTH, height: BOARD_HEIGHT}]}>
             <View style={styles.scanlines} pointerEvents="none" />
 
             {/* Falling criteria */}
@@ -444,8 +478,12 @@ const SlopLocalGameScreen = ({navigation}) => {
                   {
                     left: item.x,
                     top: item.y,
-                    backgroundColor: item.type.startsWith('bad_') ? '#8B0000' : '#4a5d23',
-                    borderColor: item.type.startsWith('bad_') ? '#FF4500' : '#39ff14',
+                    backgroundColor: item.type.startsWith('bad_')
+                      ? '#8B0000'
+                      : '#4a5d23',
+                    borderColor: item.type.startsWith('bad_')
+                      ? '#FF4500'
+                      : '#39ff14',
                   },
                 ]}>
                 <Text style={styles.itemText} numberOfLines={1}>
@@ -463,7 +501,11 @@ const SlopLocalGameScreen = ({navigation}) => {
                   transform: [{translateY: bounceAnim}],
                 },
               ]}>
-              <View style={[styles.characterAvatar, isStunned ? styles.characterAvatarStunned : {}]}>
+              <View
+                style={[
+                  styles.characterAvatar,
+                  isStunned ? styles.characterAvatarStunned : {},
+                ]}>
                 <Text style={styles.characterEmoji}>{characterExpression}</Text>
                 <Text style={styles.characterName}>Builder</Text>
               </View>
@@ -474,7 +516,8 @@ const SlopLocalGameScreen = ({navigation}) => {
               <View style={styles.boardOverlay}>
                 <Text style={styles.overlayTextTitle}>DÉMARRER LE PROJET</Text>
                 <Text style={styles.overlayTextSubtitle}>
-                  Attrapez les bons critères verts et évitez les spams et arnaques de contenu pour lancer votre appli locale !
+                  Attrapez les bons critères verts et évitez les spams et
+                  arnaques de contenu pour lancer votre appli locale !
                 </Text>
                 <TouchableOpacity
                   style={styles.actionButton}
@@ -489,8 +532,14 @@ const SlopLocalGameScreen = ({navigation}) => {
 
             {/* Overlay SUBMITTING */}
             {gameStatus === 'SUBMITTING' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(0,0,0,0.92)'}]}>
-                <Text style={styles.alertTextTitle}>🤖 AGENT-NATIVE MCP SUBMISSION...</Text>
+              <View
+                style={[
+                  styles.boardOverlay,
+                  {backgroundColor: 'rgba(0,0,0,0.92)'},
+                ]}>
+                <Text style={styles.alertTextTitle}>
+                  🤖 AGENT-NATIVE MCP SUBMISSION...
+                </Text>
                 <View style={styles.terminalContainer}>
                   {agentLogs.map((log, i) => (
                     <Text
@@ -508,20 +557,28 @@ const SlopLocalGameScreen = ({navigation}) => {
 
             {/* Overlay VICTORY */}
             {gameStatus === 'VICTORY' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(10,30,10,0.95)'}]}>
+              <View
+                style={[
+                  styles.boardOverlay,
+                  {backgroundColor: 'rgba(10,30,10,0.95)'},
+                ]}>
                 <Text style={styles.victoryEmoji}>🥕</Text>
                 <Text style={styles.victoryTitle}>PROJET PUBLIÉ !</Text>
                 <Text style={styles.victoryMessage}>
                   "Built local. Shipped fast. Not sorry."
                 </Text>
-                <Text style={styles.scoreSum}>Score : {upvotes} Upvotes 👍</Text>
+                <Text style={styles.scoreSum}>
+                  Score : {upvotes} Upvotes 👍
+                </Text>
                 <TouchableOpacity
                   style={[styles.actionButton, {backgroundColor: '#39ff14'}]}
                   onPress={() => handleGameAction('restart')}
                   accessibilityRole="button"
                   accessibilityLabel="Rebâtir un projet"
                   accessibilityHint="Recommence une nouvelle partie">
-                  <Text style={[styles.actionButtonText, {color: '#000'}]}>REBÂTIR UN PROJET</Text>
+                  <Text style={[styles.actionButtonText, {color: '#000'}]}>
+                    REBÂTIR UN PROJET
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -530,9 +587,12 @@ const SlopLocalGameScreen = ({navigation}) => {
             {gameStatus === 'GAME_OVER' && (
               <View style={styles.boardOverlay}>
                 <Text style={styles.gameOverEmoji}>🗑️</Text>
-                <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>PROJET DISQUALIFIÉ</Text>
+                <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>
+                  PROJET DISQUALIFIÉ
+                </Text>
                 <Text style={styles.overlayTextSubtitle}>
-                  Votre projet a été pollué par du spam et des fermes SEO de mauvaise qualité.
+                  Votre projet a été pollué par du spam et des fermes SEO de
+                  mauvaise qualité.
                 </Text>
                 <TouchableOpacity
                   style={[styles.actionButton, {backgroundColor: '#ff3333'}]}
