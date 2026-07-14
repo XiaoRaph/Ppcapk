@@ -145,6 +145,26 @@ const MenuScreen = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#FF4500'}]}
+              onPress={() => navigation.navigate('JulesVsClaudeGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Jules Vs Claude"
+              accessibilityHint="La bataille cérébrale suprême des agents d'IA !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🧠
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Jules Vs Claude</Text>
+                <Text style={styles.menuButtonDesc}>
+                  La bataille cérébrale suprême des agents d'IA !
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity
