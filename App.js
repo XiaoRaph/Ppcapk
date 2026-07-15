@@ -8,6 +8,7 @@ import TetrisGameScreen from './src/screens/TetrisGameScreen';
 import BobbyTablesGameScreen from './src/screens/BobbyTablesGameScreen';
 import SlopLocalGameScreen from './src/screens/SlopLocalGameScreen';
 import JulesVsClaudeGameScreen from './src/screens/JulesVsClaudeGameScreen';
+import ConflictGameScreen from './src/screens/ConflictGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -46,6 +47,9 @@ function App() {
       )}
       {currentScreen === 'JulesVsClaudeGame' && (
         <JulesVsClaudeGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'ConflictGame' && (
+        <ConflictGameScreen navigation={navigation} />
       )}
     </View>
   );
