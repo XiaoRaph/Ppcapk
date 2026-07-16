@@ -119,6 +119,25 @@ const SnakeGameScreen = ({navigation}) => {
   }, [direction]);
 
   const handleDirectionChange = useCallback(newDirection => {
+    // 🛡️ SECURITY ENHANCEMENT: Defensive validation against malformed directions
+    if (
+      !newDirection ||
+      typeof newDirection.x !== 'number' ||
+      typeof newDirection.y !== 'number'
+    ) {
+      console.warn('[Sentinel] Paramètre de direction invalide bloqué');
+      return;
+    }
+
+    const isValidStep =
+      (Math.abs(newDirection.x) === 1 && newDirection.y === 0) ||
+      (Math.abs(newDirection.y) === 1 && newDirection.x === 0);
+
+    if (!isValidStep) {
+      console.warn('[Sentinel] Coordonnées de direction non autorisées bloquées');
+      return;
+    }
+
     // Prevent 180 degree turns using the latest direction reference
     if (
       newDirection.x !== -directionRef.current.x ||
