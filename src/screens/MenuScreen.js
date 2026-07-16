@@ -149,9 +149,9 @@ const MenuScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#FF4500'}]}
-              onPress={() => navigation.navigate('JulesVsClaudeGame')}
+              onPress={() => navigation.navigate('JuliAVsClaudeGame')}
               accessibilityRole="button"
-              accessibilityLabel="Jules Vs Claude"
+              accessibilityLabel="JuliA Vs Claude"
               accessibilityHint="La bataille cérébrale suprême des agents d'IA !">
               <Text
                 style={styles.menuButtonEmoji}
@@ -160,7 +160,7 @@ const MenuScreen = ({navigation}) => {
                 🧠
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Jules Vs Claude</Text>
+                <Text style={styles.menuButtonTitle}>JuliA Vs Claude</Text>
                 <Text style={styles.menuButtonDesc}>
                   La bataille cérébrale suprême des agents d'IA !
                 </Text>
@@ -183,6 +183,26 @@ const MenuScreen = ({navigation}) => {
                 <Text style={styles.menuButtonTitle}>PR Conflict Resolver</Text>
                 <Text style={styles.menuButtonDesc}>
                   Résolvez des conflits de Pull Request sous pression CPU !
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#FFD700'}]}
+              onPress={() => navigation.navigate('EscapeGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Escape Sandbox JuliA"
+              accessibilityHint="Aidez JuliA à s'échapper du bac à sable en moins de 5 minutes !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🔒
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Escape Sandbox JuliA</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Aidez JuliA à s'échapper en moins de 5 minutes !
                 </Text>
               </View>
             </TouchableOpacity>

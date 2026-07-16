@@ -7,8 +7,9 @@ import PongGameScreen from './src/screens/PongGameScreen';
 import TetrisGameScreen from './src/screens/TetrisGameScreen';
 import BobbyTablesGameScreen from './src/screens/BobbyTablesGameScreen';
 import SlopLocalGameScreen from './src/screens/SlopLocalGameScreen';
-import JulesVsClaudeGameScreen from './src/screens/JulesVsClaudeGameScreen';
+import JuliAVsClaudeGameScreen from './src/screens/JuliAVsClaudeGameScreen';
 import ConflictGameScreen from './src/screens/ConflictGameScreen';
+import EscapeGameScreen from './src/screens/EscapeGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -45,11 +46,14 @@ function App() {
       {currentScreen === 'SlopLocalGame' && (
         <SlopLocalGameScreen navigation={navigation} />
       )}
-      {currentScreen === 'JulesVsClaudeGame' && (
-        <JulesVsClaudeGameScreen navigation={navigation} />
+      {currentScreen === 'JuliAVsClaudeGame' && (
+        <JuliAVsClaudeGameScreen navigation={navigation} />
       )}
       {currentScreen === 'ConflictGame' && (
         <ConflictGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'EscapeGame' && (
+        <EscapeGameScreen navigation={navigation} />
       )}
     </View>
   );

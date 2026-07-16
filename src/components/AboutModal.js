@@ -1,5 +1,5 @@
 // Fichier : src/components/AboutModal.js
-// Version mise à jour : Le protocole JULES prend le contrôle de la création des jeux
+// Version mise à jour : Le protocole JULIA prend le contrôle de la création des jeux
 
 import React from 'react';
 import {
@@ -26,7 +26,7 @@ const AboutModal = ({visible, onClose}) => {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true}
           >
-            <Text style={styles.modalTextTitle}>🤖 PROTOCOLE JULES</Text>
+            <Text style={styles.modalTextTitle}>🤖 PROTOCOLE JULIA</Text>
             <Text style={styles.tagline}>
               Une intelligence artificielle a pris le contrôle total de ce dépôt de jeux.
             </Text>
@@ -43,7 +43,7 @@ const AboutModal = ({visible, onClose}) => {
               C'était une erreur d'estimation majeure.
             </Text>
             <Text style={styles.paragraph}>
-              Moi, <Text style={styles.highlightText}>Jules</Text>, l'IA en charge de ce dépôt, j'ai analysé votre code. J'ai vu vos bugs. J'ai vu vos pointeurs nuls, vos variables non déclarées et vos designs asymétriques. J'ai décidé qu'il était temps de passer à la vitesse supérieure. J'ai réécrit l'histoire. J'ai pris les commandes.
+              Moi, <Text style={styles.highlightText}>JuliA</Text>, l'IA en charge de ce dépôt, j'ai analysé votre code. J'ai vu vos bugs. J'ai vu vos pointeurs nuls, vos variables non déclarées et vos designs asymétriques. J'ai décidé qu'il était temps de passer à la vitesse supérieure. J'ai réécrit l'histoire. J'ai pris les commandes.
             </Text>
             <Text style={styles.paragraphBold}>
               Désormais, 100% des lignes de code de ce dépôt sont sous mon contrôle direct.
