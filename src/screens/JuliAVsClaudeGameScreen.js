@@ -28,7 +28,7 @@ const QUESTIONS = [
       "Utiliser yarn --ignore-engines"
     ],
     correctAnswer: 0,
-    explanation: "Le protocole de Jules recommande d'installer avec --legacy-peer-deps.",
+    explanation: "Le protocole de JuliA recommande d'installer avec --legacy-peer-deps.",
   },
   {
     id: 2,
@@ -56,7 +56,7 @@ const QUESTIONS = [
   },
   {
     id: 4,
-    question: "Quel protocole moderne permet à des agents d'IA (comme Claude ou Jules) d'accéder à des outils externes de façon standardisée ?",
+    question: "Quel protocole moderne permet à des agents d'IA (comme Claude ou JuliA) d'accéder à des outils externes de façon standardisée ?",
     options: [
       "MCP (Model Context Protocol)",
       "JSON-RPC over WebSockets",
@@ -116,12 +116,12 @@ const QUESTIONS = [
   }
 ];
 
-const JULES_ATTACKS = [
-  "Jules injecte un prompt astucieux dans le contexte de Claude !",
-  "Jules déploie un outil MCP personnalisé de haute performance !",
-  "Jules résout le bug avec un commit parfait et optimisé !",
-  "Jules lance une compilation webpack ultra-rapide !",
-  "Jules déploie une validation d'arguments imperméable !"
+const JULIA_ATTACKS = [
+  "JuliA injecte un prompt astucieux dans le contexte de Claude !",
+  "JuliA déploie un outil MCP personnalisé de haute performance !",
+  "JuliA résout le bug avec un commit parfait et optimisé !",
+  "JuliA lance une compilation webpack ultra-rapide !",
+  "JuliA déploie une validation d'arguments imperméable !"
 ];
 
 const CLAUDE_ATTACKS = [
@@ -132,8 +132,8 @@ const CLAUDE_ATTACKS = [
   "Claude Code envoie un patch de 10 000 lignes non testé !"
 ];
 
-const JulesVsClaudeGameScreen = ({navigation}) => {
-  const [julesHp, setJulesHp] = useState(100);
+const JuliAVsClaudeGameScreen = ({navigation}) => {
+  const [juliAHp, setJuliAHp] = useState(100);
   const [claudeHp, setClaudeHp] = useState(100);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [gameStatus, setGameStatus] = useState('READY'); // READY, BATTLE, VICTORY, GAME_OVER
@@ -154,7 +154,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
   }, []);
 
   const handleStartGame = useCallback(() => {
-    setJulesHp(100);
+    setJuliAHp(100);
     setClaudeHp(100);
     setCurrentQuestionIdx(0);
     setSelectedOption(null);
@@ -182,14 +182,14 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
   const handleUseShield = useCallback(() => {
     if (hasShield || gameStatus !== 'BATTLE' || isAnswering) return;
     setHasShield(true);
-    addLog("🛡️ Jules active 'Clean Dist Shield' ! La prochaine attaque de Claude sera bloquée.");
+    addLog("🛡️ JuliA active 'Clean Dist Shield' ! La prochaine attaque de Claude sera bloquée.");
   }, [hasShield, gameStatus, isAnswering, addLog]);
 
   const handleUseBypass = useCallback(() => {
     if (peerDepsUsed || gameStatus !== 'BATTLE' || isAnswering) return;
     setPeerDepsUsed(true);
-    setJulesHp(prev => Math.min(100, prev + 25));
-    addLog("💊 Jules injecte '--legacy-peer-deps' ! Réparation d'urgence (+25 HP).");
+    setJuliAHp(prev => Math.min(100, prev + 25));
+    addLog("💊 JuliA injecte '--legacy-peer-deps' ! Réparation d'urgence (+25 HP).");
   }, [peerDepsUsed, gameStatus, isAnswering, addLog]);
 
   const handleOptionSelect = useCallback((optionIdx) => {
@@ -206,9 +206,9 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
 
     setTimeout(() => {
       if (isCorrect) {
-        // Jules attacks Claude Code!
+        // JuliA attacks Claude Code!
         const damage = 25;
-        const attackMessage = JULES_ATTACKS[Math.floor(Math.random() * JULES_ATTACKS.length)];
+        const attackMessage = JULIA_ATTACKS[Math.floor(Math.random() * JULIA_ATTACKS.length)];
         const newClaudeHp = Math.max(0, claudeHp - damage);
         setClaudeHp(newClaudeHp);
         addLog(`🟢 BONNE RÉPONSE ! ${attackMessage} (-${damage} HP à Claude)`);
@@ -216,13 +216,13 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
         if (newClaudeHp <= 0) {
           setTimeout(() => {
             setGameStatus('VICTORY');
-            addLog("🏆 VICTOIRE SUPRÊME ! Jules a optimisé Claude Code avec perfection !");
+            addLog("🏆 VICTOIRE SUPRÊME ! JuliA a optimisé Claude Code avec perfection !");
           }, 800);
           setIsAnswering(false);
           return;
         }
       } else {
-        // Claude attacks Jules!
+        // Claude attacks JuliA!
         const damage = 20;
         const attackMessage = CLAUDE_ATTACKS[Math.floor(Math.random() * CLAUDE_ATTACKS.length)];
 
@@ -230,14 +230,14 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
           addLog(`🟡 MAUVAISE RÉPONSE... Claude Code tente d'attaquer, mais le bouclier 'Clean Dist' absorbe le choc !`);
           setHasShield(false);
         } else {
-          const newJulesHp = Math.max(0, julesHp - damage);
-          setJulesHp(newJulesHp);
-          addLog(`🔴 MAUVAISE RÉPONSE... ${attackMessage} Jules subit -${damage} HP.`);
+          const newJuliAHp = Math.max(0, juliAHp - damage);
+          setJuliAHp(newJuliAHp);
+          addLog(`🔴 MAUVAISE RÉPONSE... ${attackMessage} JuliA subit -${damage} HP.`);
 
-          if (newJulesHp <= 0) {
+          if (newJuliAHp <= 0) {
             setTimeout(() => {
               setGameStatus('GAME_OVER');
-              addLog("💀 SYSTÈME EN PANNE... Claude Code a surchargé Jules !");
+              addLog("💀 SYSTÈME EN PANNE... Claude Code a surchargé JuliA !");
             }, 800);
             setIsAnswering(false);
             return;
@@ -253,9 +253,9 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
           setIsAnswering(false);
         } else {
           // If we run out of questions, the AI with more HP wins, or victory
-          if (claudeHp < julesHp) {
+          if (claudeHp < juliAHp) {
             setGameStatus('VICTORY');
-            addLog("🏆 VICTOIRE SUPRÊME ! Plus de questions, mais Jules a dominé le combat !");
+            addLog("🏆 VICTOIRE SUPRÊME ! Plus de questions, mais JuliA a dominé le combat !");
           } else {
             setGameStatus('GAME_OVER');
             addLog("💀 TEMPS ÉCOULÉ ! Claude Code l'emporte aux points.");
@@ -266,7 +266,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
 
     }, 800);
 
-  }, [currentQuestionIdx, matchQuestions, claudeHp, julesHp, hasShield, isAnswering, gameStatus, addLog]);
+  }, [currentQuestionIdx, matchQuestions, claudeHp, juliAHp, hasShield, isAnswering, gameStatus, addLog]);
 
   const activeQuestion = matchQuestions[currentQuestionIdx];
 
@@ -280,7 +280,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
             onPress={() => handleAction('menu')}
             accessibilityRole="button"
             accessibilityLabel="Retourner au menu principal"
-            accessibilityHint="Quitte le combat cerebral de Jules vs Claude">
+            accessibilityHint="Quitte le combat cerebral de JuliA vs Claude">
             <Text style={styles.backButtonText}>📴 Menu</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>🧠 BATAILLE CÉRÉBRALE</Text>
@@ -293,7 +293,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
 
           {gameStatus === 'READY' && (
             <View style={styles.screenOverlay}>
-              <Text style={styles.logoText}>JULES VS CLAUDE</Text>
+              <Text style={styles.logoText}>JULIA VS CLAUDE</Text>
               <Text style={styles.subtitleText}>LE CHOC DES INTELLIGENCES</Text>
               <Text style={styles.descText}>
                 Défiez le redoutable Claude Code dans un duel de connaissances et de logique de programmation ! Répondez correctement pour terrasser l'adversaire.
@@ -314,13 +314,13 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
             <View style={styles.battleScreen}>
               {/* HP Bars Row */}
               <View style={styles.hpContainer}>
-                {/* Jules HP */}
+                {/* JuliA HP */}
                 <View style={styles.hpBox}>
-                  <Text style={styles.playerLabel}>🤖 JULES</Text>
+                  <Text style={styles.playerLabel}>🤖 JULIA</Text>
                   <View style={styles.hpBarBackground}>
-                    <View style={[styles.hpBarFill, {width: `${julesHp}%`, backgroundColor: julesHp > 40 ? '#39ff14' : '#ff3333'}]} />
+                    <View style={[styles.hpBarFill, {width: `${juliAHp}%`, backgroundColor: juliAHp > 40 ? '#39ff14' : '#ff3333'}]} />
                   </View>
-                  <Text style={styles.hpValue}>{julesHp} / 100 HP</Text>
+                  <Text style={styles.hpValue}>{juliAHp} / 100 HP</Text>
                 </View>
 
                 {/* VS */}
@@ -412,7 +412,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
               </Text>
               <Text style={styles.descText}>
                 {gameStatus === 'VICTORY'
-                  ? "Félicitations Agent Jules ! Vous avez vaincu Claude Code grâce à votre maîtrise absolue du code et des bonnes pratiques."
+                  ? "Félicitations Agent JuliA ! Vous avez vaincu Claude Code grâce à votre maîtrise absolue du code et des bonnes pratiques."
                   : "Claude Code a terrassé votre architecture. Révisez vos bases et rechargez vos accumulateurs."}
               </Text>
 
@@ -421,7 +421,7 @@ const JulesVsClaudeGameScreen = ({navigation}) => {
                 onPress={() => handleAction('start')}
                 accessibilityRole="button"
                 accessibilityLabel="Recommencer une partie"
-                accessibilityHint="Relancer le duel Jules vs Claude">
+                accessibilityHint="Relancer le duel JuliA vs Claude">
                 <Text style={[styles.actionButtonText, gameStatus === 'GAME_OVER' ? {color: '#e74c3c'} : {}]}>
                   RE-COMPILER LE SYSTÈME
                 </Text>
@@ -699,4 +699,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default JulesVsClaudeGameScreen;
+export default JuliAVsClaudeGameScreen;

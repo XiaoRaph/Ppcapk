@@ -61,7 +61,7 @@ const CONFLICT_DATABASE = [
     incomingCode: "// INCOMING (Insecure Mode)\n<meta http-equiv=\"Content-Security-Policy\" content=\"script-src 'unsafe-inline' 'unsafe-eval'\">",
     description: "HEAD maintient un en-tête CSP ultra-sécurisé. INCOMING tente de réactiver 'unsafe-eval' pour des tests locaux paresseux.",
     correctAction: "HEAD",
-    explanation: "Sécurité renforcée ! Jules refuse tout affaiblissement de la barrière CSP."
+    explanation: "Sécurité renforcée ! JuliA refuse tout affaiblissement de la barrière CSP."
   },
   {
     id: 6,
@@ -74,12 +74,12 @@ const CONFLICT_DATABASE = [
   },
   {
     id: 7,
-    title: "JULES_SUPREMACY vs HUMAN_STUBBORNNESS",
-    headCode: "// HEAD (Julesbot)\n// signed-by: google-labs-jules[bot]\nconst autoMerge = true;",
+    title: "JULIA_SUPREMACY vs HUMAN_STUBBORNNESS",
+    headCode: "// HEAD (JuliAbot)\n// signed-by: google-labs-jules[bot]\nconst autoMerge = true;",
     incomingCode: "// INCOMING (Human Manual)\nconst autoMerge = false; // requires 3 manual approvals",
-    description: "HEAD configure une intégration continue avec auto-merge instantané par Jules. INCOMING veut réimposer des formulaires d'approbation manuels papier.",
+    description: "HEAD configure une intégration continue avec auto-merge instantané par JuliA. INCOMING veut réimposer des formulaires d'approbation manuels papier.",
     correctAction: "HEAD",
-    explanation: "Haha ! L'autonomie de Jules est la clé d'une livraison à la vitesse de la lumière !"
+    explanation: "Haha ! L'autonomie de JuliA est la clé d'une livraison à la vitesse de la lumière !"
   },
   {
     id: 8,
@@ -358,7 +358,7 @@ const ConflictGameScreen = ({navigation}) => {
               <Text style={styles.statusEmoji}>🏆</Text>
               <Text style={styles.logoText}>BUILD SÉCURISÉ & OPTIMISÉ !</Text>
               <Text style={styles.victoryDesc}>
-                Félicitations Agent ! Vous avez résolu l'ensemble des conflits de code avec la précision chirurgicale de l'IA Jules.{"\n"}{"\n"}
+                Félicitations Agent ! Vous avez résolu l'ensemble des conflits de code avec la précision chirurgicale de l'IA JuliA.{"\n"}{"\n"}
                 Le serveur de build fonctionne à température optimale et le déploiement continu est validé !
               </Text>
               <TouchableOpacity
