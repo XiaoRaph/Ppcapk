@@ -15,6 +15,23 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
 
   const navigate = screenName => {
+    // 🛡️ SECURITY ENHANCEMENT: Strict whitelist validation on navigation screens
+    const VALID_SCREENS = [
+      'Menu',
+      'Game',
+      'SnakeGame',
+      'PongGame',
+      'TetrisGame',
+      'BobbyTablesGame',
+      'SlopLocalGame',
+      'JuliAVsClaudeGame',
+      'ConflictGame',
+      'EscapeGame',
+    ];
+    if (!VALID_SCREENS.includes(screenName)) {
+      console.warn(`[Sentinel] Tentative de navigation non autorisée vers : "${screenName}"`);
+      return;
+    }
     setCurrentScreen(screenName);
   };
 
