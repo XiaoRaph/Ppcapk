@@ -20,94 +20,132 @@ const CONTAINER_HEIGHT = windowHeight - MIN_OFFSETS;
 const CONFLICT_DATABASE = [
   {
     id: 1,
-    title: "OPTIM_LOOP vs STALE_FORMAT",
-    headCode: "// HEAD (Optimal)\nconst gameLoop = () => {\n  if (isPausedRef.current) return;\n  updatePhysics();\n  requestAnimationFrame(gameLoop);\n};",
-    incomingCode: "// INCOMING (Stale)\nconst gameLoop = () => {\n    // Fix indentation\n    updatePhysics();\n    requestAnimationFrame(gameLoop);\n};",
-    description: "HEAD contient une optimisation Bolt par ref pour éviter les closures périmées à 60 FPS. INCOMING n'est qu'un reformatage d'espaces obsolète.",
-    correctAction: "HEAD", // HEAD, INCOMING, MERGE, ABORT
-    explanation: "Excellent ! Préserver les performances à 60 FPS est notre priorité absolue."
+    title: 'OPTIM_LOOP vs STALE_FORMAT',
+    headCode:
+      '// HEAD (Optimal)\nconst gameLoop = () => {\n  if (isPausedRef.current) return;\n  updatePhysics();\n  requestAnimationFrame(gameLoop);\n};',
+    incomingCode:
+      '// INCOMING (Stale)\nconst gameLoop = () => {\n    // Fix indentation\n    updatePhysics();\n    requestAnimationFrame(gameLoop);\n};',
+    description:
+      "HEAD contient une optimisation Bolt par ref pour éviter les closures périmées à 60 FPS. INCOMING n'est qu'un reformatage d'espaces obsolète.",
+    correctAction: 'HEAD', // HEAD, INCOMING, MERGE, ABORT
+    explanation:
+      'Excellent ! Préserver les performances à 60 FPS est notre priorité absolue.',
   },
   {
     id: 2,
-    title: "SECURITY_WHITELIST vs SQL_BYPASS",
-    headCode: "// HEAD (Secure)\nconst handleChoice = (choice) => {\n  const WHITELIST = ['Pierre', 'Papier', 'Ciseaux'];\n  if (!WHITELIST.includes(choice)) return;\n  execute(choice);\n};",
-    incomingCode: "// INCOMING (Unsafe)\nconst handleChoice = (choice) => {\n  executeRawSQL(`SELECT * FROM choices WHERE name = '${choice}'`);\n};",
-    description: "HEAD implémente une validation défensive Sentinel contre un dictionnaire strict. INCOMING tente une concaténation SQL brute vulnérable à Little Bobby Tables.",
-    correctAction: "HEAD",
-    explanation: "Sécurité validée ! L'injection SQL a été écartée avec succès."
+    title: 'SECURITY_WHITELIST vs SQL_BYPASS',
+    headCode:
+      "// HEAD (Secure)\nconst handleChoice = (choice) => {\n  const WHITELIST = ['Pierre', 'Papier', 'Ciseaux'];\n  if (!WHITELIST.includes(choice)) return;\n  execute(choice);\n};",
+    incomingCode:
+      "// INCOMING (Unsafe)\nconst handleChoice = (choice) => {\n  executeRawSQL(`SELECT * FROM choices WHERE name = '${choice}'`);\n};",
+    description:
+      'HEAD implémente une validation défensive Sentinel contre un dictionnaire strict. INCOMING tente une concaténation SQL brute vulnérable à Little Bobby Tables.',
+    correctAction: 'HEAD',
+    explanation:
+      "Sécurité validée ! L'injection SQL a été écartée avec succès.",
   },
   {
     id: 3,
-    title: "ACCESSIBILITY_ROLES vs ACCESSIBILITY_NONE",
-    headCode: "// HEAD (Accessible)\n<TouchableOpacity\n  accessibilityRole=\"button\"\n  accessibilityLabel=\"Valider\"\n  accessibilityHint=\"Confirme votre choix\">\n  <Text>OK</Text>\n</TouchableOpacity>",
-    incomingCode: "// INCOMING (Legacy)\n<TouchableOpacity>\n  <Text>OK</Text>\n</TouchableOpacity>",
-    description: "HEAD contient des balises d'accessibilité Palette indispensables pour les lecteurs d'écran. INCOMING n'a aucune description sémantique.",
-    correctAction: "HEAD",
-    explanation: "Parfait ! Un design accessible est garant de l'inclusion de tous les joueurs."
+    title: 'ACCESSIBILITY_ROLES vs ACCESSIBILITY_NONE',
+    headCode:
+      '// HEAD (Accessible)\n<TouchableOpacity\n  accessibilityRole="button"\n  accessibilityLabel="Valider"\n  accessibilityHint="Confirme votre choix">\n  <Text>OK</Text>\n</TouchableOpacity>',
+    incomingCode:
+      '// INCOMING (Legacy)\n<TouchableOpacity>\n  <Text>OK</Text>\n</TouchableOpacity>',
+    description:
+      "HEAD contient des balises d'accessibilité Palette indispensables pour les lecteurs d'écran. INCOMING n'a aucune description sémantique.",
+    correctAction: 'HEAD',
+    explanation:
+      "Parfait ! Un design accessible est garant de l'inclusion de tous les joueurs.",
   },
   {
     id: 4,
-    title: "REANIMATED_V3 vs REANIMATED_V1",
-    headCode: "// HEAD (Modern Web)\nimport Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';",
-    incomingCode: "// INCOMING (Legacy Reanimated)\nimport Animated from 'react-native-reanimated/lib/reanimated1';",
-    description: "HEAD utilise Reanimated v3 optimisé pour le web sans blocage du thread principal. INCOMING utilise l'ancienne v1 dépréciée.",
-    correctAction: "HEAD",
-    explanation: "Correct ! La fluidité des animations web repose sur les nouveautés de Reanimated v3."
+    title: 'REANIMATED_V3 vs REANIMATED_V1',
+    headCode:
+      "// HEAD (Modern Web)\nimport Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';",
+    incomingCode:
+      "// INCOMING (Legacy Reanimated)\nimport Animated from 'react-native-reanimated/lib/reanimated1';",
+    description:
+      "HEAD utilise Reanimated v3 optimisé pour le web sans blocage du thread principal. INCOMING utilise l'ancienne v1 dépréciée.",
+    correctAction: 'HEAD',
+    explanation:
+      'Correct ! La fluidité des animations web repose sur les nouveautés de Reanimated v3.',
   },
   {
     id: 5,
-    title: "CSP_SENTINEL vs INSECURE_EVAL",
-    headCode: "// HEAD (CSP Rules)\n<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self'\">",
-    incomingCode: "// INCOMING (Insecure Mode)\n<meta http-equiv=\"Content-Security-Policy\" content=\"script-src 'unsafe-inline' 'unsafe-eval'\">",
-    description: "HEAD maintient un en-tête CSP ultra-sécurisé. INCOMING tente de réactiver 'unsafe-eval' pour des tests locaux paresseux.",
-    correctAction: "HEAD",
-    explanation: "Sécurité renforcée ! JuliA refuse tout affaiblissement de la barrière CSP."
+    title: 'CSP_SENTINEL vs INSECURE_EVAL',
+    headCode:
+      '// HEAD (CSP Rules)\n<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'">',
+    incomingCode:
+      '// INCOMING (Insecure Mode)\n<meta http-equiv="Content-Security-Policy" content="script-src \'unsafe-inline\' \'unsafe-eval\'">',
+    description:
+      "HEAD maintient un en-tête CSP ultra-sécurisé. INCOMING tente de réactiver 'unsafe-eval' pour des tests locaux paresseux.",
+    correctAction: 'HEAD',
+    explanation:
+      'Sécurité renforcée ! JuliA refuse tout affaiblissement de la barrière CSP.',
   },
   {
     id: 6,
-    title: "MEMOIZED_STATIC vs GC_STRESS",
-    headCode: "// HEAD (Memoized)\nconst StaticGrid = useMemo(() => <BackgroundGrid />, []);",
-    incomingCode: "// INCOMING (Recreates on frame)\nconst StaticGrid = () => <BackgroundGrid />;",
-    description: "HEAD isole la grille de fond statique avec useMemo pour éviter de surcharger le Garbage Collector. INCOMING la ré-instancie à chaque rafraîchissement.",
-    correctAction: "HEAD",
-    explanation: "Exact ! Stabiliser le rendu évite les micro-saccades de garbage collection."
+    title: 'MEMOIZED_STATIC vs GC_STRESS',
+    headCode:
+      '// HEAD (Memoized)\nconst StaticGrid = useMemo(() => <BackgroundGrid />, []);',
+    incomingCode:
+      '// INCOMING (Recreates on frame)\nconst StaticGrid = () => <BackgroundGrid />;',
+    description:
+      'HEAD isole la grille de fond statique avec useMemo pour éviter de surcharger le Garbage Collector. INCOMING la ré-instancie à chaque rafraîchissement.',
+    correctAction: 'HEAD',
+    explanation:
+      'Exact ! Stabiliser le rendu évite les micro-saccades de garbage collection.',
   },
   {
     id: 7,
-    title: "JULIA_SUPREMACY vs HUMAN_STUBBORNNESS",
-    headCode: "// HEAD (JuliAbot)\n// signed-by: google-labs-jules[bot]\nconst autoMerge = true;",
-    incomingCode: "// INCOMING (Human Manual)\nconst autoMerge = false; // requires 3 manual approvals",
-    description: "HEAD configure une intégration continue avec auto-merge instantané par JuliA. INCOMING veut réimposer des formulaires d'approbation manuels papier.",
-    correctAction: "HEAD",
-    explanation: "Haha ! L'autonomie de JuliA est la clé d'une livraison à la vitesse de la lumière !"
+    title: 'JULIA_SUPREMACY vs HUMAN_STUBBORNNESS',
+    headCode:
+      '// HEAD (JuliAbot)\n// signed-by: google-labs-jules[bot]\nconst autoMerge = true;',
+    incomingCode:
+      '// INCOMING (Human Manual)\nconst autoMerge = false; // requires 3 manual approvals',
+    description:
+      "HEAD configure une intégration continue avec auto-merge instantané par JuliA. INCOMING veut réimposer des formulaires d'approbation manuels papier.",
+    correctAction: 'HEAD',
+    explanation:
+      "Haha ! L'autonomie de JuliA est la clé d'une livraison à la vitesse de la lumière !",
   },
   {
     id: 8,
-    title: "STATED_NAV vs HEAVY_NAV",
-    headCode: "// HEAD (Light Navigation)\nconst [currentScreen, setCurrentScreen] = useState('Menu');",
-    incomingCode: "// INCOMING (Complex Router)\nimport { createStackNavigator } from '@react-navigation/stack';\n// requires native navigation modules",
-    description: "HEAD implémente une navigation par état simple et compatible 100% web. INCOMING tente d'installer un routeur lourd causant des plantages au bundling webpack.",
-    correctAction: "HEAD",
-    explanation: "Tout à fait ! Rester simple garantit un chargement instantané de la web-app."
+    title: 'STATED_NAV vs HEAVY_NAV',
+    headCode:
+      "// HEAD (Light Navigation)\nconst [currentScreen, setCurrentScreen] = useState('Menu');",
+    incomingCode:
+      "// INCOMING (Complex Router)\nimport { createStackNavigator } from '@react-navigation/stack';\n// requires native navigation modules",
+    description:
+      "HEAD implémente une navigation par état simple et compatible 100% web. INCOMING tente d'installer un routeur lourd causant des plantages au bundling webpack.",
+    correctAction: 'HEAD',
+    explanation:
+      'Tout à fait ! Rester simple garantit un chargement instantané de la web-app.',
   },
   {
     id: 9,
-    title: "VIEWPORT_FLEX vs HARDCODED_DIM",
-    headCode: "// HEAD (Responsive)\nconst BOARD_HEIGHT = windowHeight - 320;",
-    incomingCode: "// INCOMING (Hardcoded)\nconst BOARD_HEIGHT = 650; // Ideal for my 4K monitor",
-    description: "HEAD calcule dynamiquement l'espace pour éviter tout débordement d'écran. INCOMING force une hauteur fixe qui dépasse de l'écran des smartphones.",
-    correctAction: "HEAD",
-    explanation: "Superbe ! La réactivité mobile-web évite le scroll horizontal interdit."
+    title: 'VIEWPORT_FLEX vs HARDCODED_DIM',
+    headCode: '// HEAD (Responsive)\nconst BOARD_HEIGHT = windowHeight - 320;',
+    incomingCode:
+      '// INCOMING (Hardcoded)\nconst BOARD_HEIGHT = 650; // Ideal for my 4K monitor',
+    description:
+      "HEAD calcule dynamiquement l'espace pour éviter tout débordement d'écran. INCOMING force une hauteur fixe qui dépasse de l'écran des smartphones.",
+    correctAction: 'HEAD',
+    explanation:
+      'Superbe ! La réactivité mobile-web évite le scroll horizontal interdit.',
   },
   {
     id: 10,
-    title: "CONFLICT_RESOLVER_GAME vs MISSING_SCREEN",
-    headCode: "// HEAD (Conflict Resolver)\nimport ConflictGameScreen from './src/screens/ConflictGameScreen';",
-    incomingCode: "// INCOMING (Empty File)\n// Todo: create conflict resolver screen tomorrow",
-    description: "HEAD contient l'implémentation complète et jouable du résolveur de conflits de Pull Requests. INCOMING n'est qu'un squelette vide.",
-    correctAction: "HEAD",
-    explanation: "Parfait ! Vous venez de valider le jeu lui-même !"
-  }
+    title: 'CONFLICT_RESOLVER_GAME vs MISSING_SCREEN',
+    headCode:
+      "// HEAD (Conflict Resolver)\nimport ConflictGameScreen from './src/screens/ConflictGameScreen';",
+    incomingCode:
+      '// INCOMING (Empty File)\n// Todo: create conflict resolver screen tomorrow',
+    description:
+      "HEAD contient l'implémentation complète et jouable du résolveur de conflits de Pull Requests. INCOMING n'est qu'un squelette vide.",
+    correctAction: 'HEAD',
+    explanation: 'Parfait ! Vous venez de valider le jeu lui-même !',
+  },
 ];
 
 const ConflictGameScreen = ({navigation}) => {
@@ -116,7 +154,7 @@ const ConflictGameScreen = ({navigation}) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [cpuHeat, setCpuHeat] = useState(30); // starts at 30%
   const [gameStatus, setGameStatus] = useState('READY'); // READY, PLAYING, VICTORY, GAME_OVER
-  const [actionFeedback, setActionFeedback] = useState("");
+  const [actionFeedback, setActionFeedback] = useState('');
   const [isSuccess, setIsSuccess] = useState(true);
 
   // References for game loop & keyboard listeners
@@ -139,7 +177,9 @@ const ConflictGameScreen = ({navigation}) => {
 
   // Heat timer simulation - CPU heats up by 1.8% every second
   useEffect(() => {
-    if (gameStatus !== 'PLAYING') return;
+    if (gameStatus !== 'PLAYING') {
+      return;
+    }
 
     const timer = setInterval(() => {
       setCpuHeat(prev => {
@@ -157,14 +197,16 @@ const ConflictGameScreen = ({navigation}) => {
   }, [gameStatus]);
 
   // Handle player conflict resolution decision
-  const handleResolve = useCallback((action) => {
-    const VALID_ACTIONS = ["HEAD", "INCOMING", "MERGE", "ABORT"];
+  const handleResolve = useCallback(action => {
+    const VALID_ACTIONS = ['HEAD', 'INCOMING', 'MERGE', 'ABORT'];
     if (!VALID_ACTIONS.includes(action)) {
       console.warn(`Action non autorisée: ${action}`);
       return;
     }
 
-    if (gameStatusRef.current !== 'PLAYING') return;
+    if (gameStatusRef.current !== 'PLAYING') {
+      return;
+    }
 
     const currentConflict = CONFLICT_DATABASE[currentIdxRef.current];
     const isCorrect = currentConflict.correctAction === action;
@@ -184,12 +226,14 @@ const ConflictGameScreen = ({navigation}) => {
         return nextHeat;
       });
       setIsSuccess(false);
-      setActionFeedback(`❌ ERREUR ! Le compilateur a surchauffé ! La bonne décision était : ${currentConflict.correctAction}`);
+      setActionFeedback(
+        `❌ ERREUR ! Le compilateur a surchauffé ! La bonne décision était : ${currentConflict.correctAction}`,
+      );
     }
 
     // Move to next conflict or win
     setTimeout(() => {
-      setActionFeedback("");
+      setActionFeedback('');
       const nextIdx = currentIdxRef.current + 1;
       if (nextIdx >= CONFLICT_DATABASE.length) {
         setGameStatus('VICTORY');
@@ -201,14 +245,19 @@ const ConflictGameScreen = ({navigation}) => {
 
   // Physical Keyboard listener for React Native Web
   useEffect(() => {
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web') {
+      return;
+    }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (gameStatusRef.current !== 'PLAYING') {
         if (e.key === ' ' || e.key === 'Enter') {
           if (gameStatusRef.current === 'READY') {
             startGame();
-          } else if (gameStatusRef.current === 'VICTORY' || gameStatusRef.current === 'GAME_OVER') {
+          } else if (
+            gameStatusRef.current === 'VICTORY' ||
+            gameStatusRef.current === 'GAME_OVER'
+          ) {
             resetGame();
           }
         }
@@ -254,7 +303,7 @@ const ConflictGameScreen = ({navigation}) => {
     setCurrentIdx(0);
     setCpuHeat(30);
     setGameStatus('PLAYING');
-    setActionFeedback("");
+    setActionFeedback('');
   };
 
   const resetGame = () => {
@@ -280,12 +329,15 @@ const ConflictGameScreen = ({navigation}) => {
   }, [navigation]);
 
   const statsComponent = useMemo(() => {
-    const heatColor = cpuHeat > 80 ? '#e74c3c' : cpuHeat > 55 ? '#e67e22' : '#2ecc71';
+    const heatColor =
+      cpuHeat > 80 ? '#e74c3c' : cpuHeat > 55 ? '#e67e22' : '#2ecc71';
     return (
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>INDEX RESOLVED</Text>
-          <Text style={styles.statValue}>{score} / {CONFLICT_DATABASE.length}</Text>
+          <Text style={styles.statValue}>
+            {score} / {CONFLICT_DATABASE.length}
+          </Text>
         </View>
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>CPU HEAT</Text>
@@ -311,11 +363,17 @@ const ConflictGameScreen = ({navigation}) => {
           {gameStatus === 'READY' && (
             <View style={styles.screenOverlay}>
               <Text style={styles.logoText}>💻 PR RESOLVER 💻</Text>
-              <Text style={styles.subtext}>AGENT JULES - CYBERSECURITY TASK</Text>
+              <Text style={styles.subtext}>
+                AGENT JULIA - CYBERSECURITY TASK
+              </Text>
               <Text style={styles.description}>
-                Des conflits de Pull Request menacent d'endommager notre serveur de build !{"\n"}
-                Analysez les blocs de code en conflit et prenez la décision optimale pour préserver les performances et la sécurité.{"\n"}{"\n"}
-                🔥 Attention : la température CPU augmente chaque seconde ! Résolvez les conflits rapidement pour refroidir le compilateur !
+                Des conflits de Pull Request menacent d'endommager notre serveur
+                de build !{'\n'}
+                Analysez les blocs de code en conflit et prenez la décision
+                optimale pour préserver les performances et la sécurité.{'\n'}
+                {'\n'}
+                🔥 Attention : la température CPU augmente chaque seconde !
+                Résolvez les conflits rapidement pour refroidir le compilateur !
               </Text>
               <TouchableOpacity
                 style={styles.actionButton}
@@ -323,7 +381,9 @@ const ConflictGameScreen = ({navigation}) => {
                 accessibilityRole="button"
                 accessibilityLabel="Commencer la résolution de conflits"
                 accessibilityHint="Lance le jeu de résolution de conflits de Pull Request">
-                <Text style={styles.actionButtonText}>DÉMARRER LA COMPILATION</Text>
+                <Text style={styles.actionButtonText}>
+                  DÉMARRER LA COMPILATION
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -336,16 +396,28 @@ const ConflictGameScreen = ({navigation}) => {
               <Text style={styles.conflictDesc}>{conflict.description}</Text>
 
               {/* Code Workspace Display */}
-              <ScrollView style={styles.codeWorkspace} contentContainerStyle={{paddingBottom: 10}}>
+              <ScrollView
+                style={styles.codeWorkspace}
+                contentContainerStyle={{paddingBottom: 10}}>
                 <Text style={styles.codeTextHead}>{conflict.headCode}</Text>
                 <Text style={styles.codeDivider}>=======</Text>
-                <Text style={styles.codeTextIncoming}>{conflict.incomingCode}</Text>
+                <Text style={styles.codeTextIncoming}>
+                  {conflict.incomingCode}
+                </Text>
               </ScrollView>
 
               {/* Action feedback popup overlay inside game board */}
-              {actionFeedback !== "" && (
-                <View style={[styles.feedbackBox, {borderColor: isSuccess ? '#2ecc71' : '#e74c3c'}]}>
-                  <Text style={[styles.feedbackText, {color: isSuccess ? '#2ecc71' : '#e74c3c'}]}>
+              {actionFeedback !== '' && (
+                <View
+                  style={[
+                    styles.feedbackBox,
+                    {borderColor: isSuccess ? '#2ecc71' : '#e74c3c'},
+                  ]}>
+                  <Text
+                    style={[
+                      styles.feedbackText,
+                      {color: isSuccess ? '#2ecc71' : '#e74c3c'},
+                    ]}>
                     {actionFeedback}
                   </Text>
                 </View>
@@ -358,8 +430,11 @@ const ConflictGameScreen = ({navigation}) => {
               <Text style={styles.statusEmoji}>🏆</Text>
               <Text style={styles.logoText}>BUILD SÉCURISÉ & OPTIMISÉ !</Text>
               <Text style={styles.victoryDesc}>
-                Félicitations Agent ! Vous avez résolu l'ensemble des conflits de code avec la précision chirurgicale de l'IA JuliA.{"\n"}{"\n"}
-                Le serveur de build fonctionne à température optimale et le déploiement continu est validé !
+                Félicitations Agent ! Vous avez résolu l'ensemble des conflits
+                de code avec la précision chirurgicale de l'IA JuliA.{'\n'}
+                {'\n'}
+                Le serveur de build fonctionne à température optimale et le
+                déploiement continu est validé !
               </Text>
               <TouchableOpacity
                 style={[styles.actionButton, {borderColor: '#2ecc71'}]}
@@ -377,10 +452,15 @@ const ConflictGameScreen = ({navigation}) => {
           {gameStatus === 'GAME_OVER' && (
             <View style={styles.screenOverlay}>
               <Text style={styles.statusEmoji}>💀</Text>
-              <Text style={[styles.logoText, {color: '#e74c3c'}]}>CPU SURCHAUFFÉ ! CRASH !</Text>
+              <Text style={[styles.logoText, {color: '#e74c3c'}]}>
+                CPU SURCHAUFFÉ ! CRASH !
+              </Text>
               <Text style={styles.victoryDesc}>
-                Le compilateur a surchauffé et a planté avant la fusion complète de la branche.{"\n"}{"\n"}
-                Révisez les guides de performance Bolt et de sécurité Sentinel avant d'endommager les processeurs de production !
+                Le compilateur a surchauffé et a planté avant la fusion complète
+                de la branche.{'\n'}
+                {'\n'}
+                Révisez les guides de performance Bolt et de sécurité Sentinel
+                avant d'endommager les processeurs de production !
               </Text>
               <TouchableOpacity
                 style={[styles.actionButton, {borderColor: '#e74c3c'}]}
@@ -681,7 +761,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     letterSpacing: 0.5,
-  }
+  },
 });
 
 export default ConflictGameScreen;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,13 +7,55 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import AboutModal from '../components/AboutModal';
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Retro background or fallback
 
+const isWeb = Platform.OS === 'web';
+
 const MenuScreen = ({navigation}) => {
   const [isAboutModalVisible, setIsAboutModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isWeb) {
+      return;
+    }
+
+    const handleKeyDown = e => {
+      if (isAboutModalVisible) {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+          setIsAboutModalVisible(false);
+          e.preventDefault();
+        }
+        return;
+      }
+
+      const keyMap = {
+        1: 'Game',
+        2: 'SnakeGame',
+        3: 'PongGame',
+        4: 'TetrisGame',
+        5: 'BobbyTablesGame',
+        6: 'SlopLocalGame',
+        7: 'JuliAVsClaudeGame',
+        8: 'ConflictGame',
+        9: 'EscapeGame',
+      };
+
+      if (keyMap[e.key]) {
+        navigation.navigate(keyMap[e.key]);
+      } else if (e.key.toLowerCase() === 'i') {
+        setIsAboutModalVisible(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isAboutModalVisible, navigation]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -24,7 +66,9 @@ const MenuScreen = ({navigation}) => {
             <Text style={styles.subtitle}>Choisissez un jeu populaire</Text>
           </View>
 
-          <ScrollView style={styles.scrollWrapper} contentContainerStyle={styles.menuContainer}>
+          <ScrollView
+            style={styles.scrollWrapper}
+            contentContainerStyle={styles.menuContainer}>
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#007AFF'}]}
               onPress={() => navigation.navigate('Game')}
@@ -39,6 +83,7 @@ const MenuScreen = ({navigation}) => {
               </Text>
               <View style={styles.menuButtonTextContainer}>
                 <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[1] </Text>}
                   Pierre, Papier, Ciseaux
                 </Text>
                 <Text style={styles.menuButtonDesc}>
@@ -60,7 +105,10 @@ const MenuScreen = ({navigation}) => {
                 🐍
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Snake Game</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[2] </Text>}
+                  Snake Game
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Mangez les fruits et évitez les murs
                 </Text>
@@ -80,7 +128,10 @@ const MenuScreen = ({navigation}) => {
                 🏓
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Pong Classic</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[3] </Text>}
+                  Pong Classic
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Le jeu légendaire des consoles rétro
                 </Text>
@@ -100,7 +151,10 @@ const MenuScreen = ({navigation}) => {
                 🧱
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Tetris Rétro</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[4] </Text>}
+                  Tetris Rétro
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Empilez les blocs et complétez les lignes
                 </Text>
@@ -120,7 +174,10 @@ const MenuScreen = ({navigation}) => {
                 🧑‍💻
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Little Bobby Tables</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[5] </Text>}
+                  Little Bobby Tables
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Assemblez l'injection SQL et détruisez la table !
                 </Text>
@@ -140,7 +197,10 @@ const MenuScreen = ({navigation}) => {
                 🥕
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Slop Local Game</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[6] </Text>}
+                  Slop Local Game
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Rejoignez le marché local des builders d'IA !
                 </Text>
@@ -160,7 +220,10 @@ const MenuScreen = ({navigation}) => {
                 🧠
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>JuliA Vs Claude</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[7] </Text>}
+                  JuliA Vs Claude
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   La bataille cérébrale suprême des agents d'IA !
                 </Text>
@@ -180,7 +243,10 @@ const MenuScreen = ({navigation}) => {
                 💻
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>PR Conflict Resolver</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[8] </Text>}
+                  PR Conflict Resolver
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Résolvez des conflits de Pull Request sous pression CPU !
                 </Text>
@@ -200,7 +266,10 @@ const MenuScreen = ({navigation}) => {
                 🔒
               </Text>
               <View style={styles.menuButtonTextContainer}>
-                <Text style={styles.menuButtonTitle}>Escape Sandbox JuliA</Text>
+                <Text style={styles.menuButtonTitle}>
+                  {isWeb && <Text style={styles.shortcutHint}>[9] </Text>}
+                  Escape Sandbox JuliA
+                </Text>
                 <Text style={styles.menuButtonDesc}>
                   Aidez JuliA à s'échapper en moins de 5 minutes !
                 </Text>
@@ -214,7 +283,10 @@ const MenuScreen = ({navigation}) => {
             accessibilityRole="button"
             accessibilityLabel="À Propos"
             accessibilityHint="Afficher les informations à propos de l'application">
-            <Text style={styles.aboutButtonText}>ℹ️ À Propos</Text>
+            <Text style={styles.aboutButtonText}>
+              ℹ️ À Propos{' '}
+              {isWeb && <Text style={styles.shortcutText}>[I]</Text>}
+            </Text>
           </TouchableOpacity>
 
           <AboutModal
@@ -322,6 +394,15 @@ const styles = StyleSheet.create({
   aboutButtonText: {
     color: '#FFFFFF',
     fontSize: 14,
+    fontWeight: 'bold',
+  },
+  shortcutHint: {
+    color: '#FFD700',
+    fontWeight: '900',
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+  },
+  shortcutText: {
+    color: '#FFD700',
     fontWeight: 'bold',
   },
 });
