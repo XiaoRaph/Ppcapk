@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,13 +7,64 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import AboutModal from '../components/AboutModal';
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Retro background or fallback
 
+const isWeb = Platform.OS === 'web';
+
 const MenuScreen = ({navigation}) => {
   const [isAboutModalVisible, setIsAboutModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isWeb) {
+      return;
+    }
+
+    const handleKeyDown = event => {
+      if (isAboutModalVisible) {
+        if (
+          event.key === 'Escape' ||
+          event.key === ' ' ||
+          event.key === 'Enter'
+        ) {
+          event.preventDefault();
+          setIsAboutModalVisible(false);
+        }
+        return;
+      }
+
+      const key = event.key;
+      if (key >= '1' && key <= '9') {
+        const index = parseInt(key, 10) - 1;
+        const screens = [
+          'Game',
+          'SnakeGame',
+          'PongGame',
+          'TetrisGame',
+          'BobbyTablesGame',
+          'SlopLocalGame',
+          'JuliAVsClaudeGame',
+          'ConflictGame',
+          'EscapeGame',
+        ];
+        if (index >= 0 && index < screens.length) {
+          event.preventDefault();
+          navigation.navigate(screens[index]);
+        }
+      } else if (key.toLowerCase() === 'i') {
+        event.preventDefault();
+        setIsAboutModalVisible(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isAboutModalVisible, navigation]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -24,7 +75,9 @@ const MenuScreen = ({navigation}) => {
             <Text style={styles.subtitle}>Choisissez un jeu populaire</Text>
           </View>
 
-          <ScrollView style={styles.scrollWrapper} contentContainerStyle={styles.menuContainer}>
+          <ScrollView
+            style={styles.scrollWrapper}
+            contentContainerStyle={styles.menuContainer}>
             <TouchableOpacity
               style={[styles.menuButton, {borderLeftColor: '#007AFF'}]}
               onPress={() => navigation.navigate('Game')}
@@ -45,6 +98,14 @@ const MenuScreen = ({navigation}) => {
                   Défiez l'ordinateur dans ce jeu classique
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>1</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -65,6 +126,14 @@ const MenuScreen = ({navigation}) => {
                   Mangez les fruits et évitez les murs
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>2</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -85,6 +154,14 @@ const MenuScreen = ({navigation}) => {
                   Le jeu légendaire des consoles rétro
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>3</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -105,6 +182,14 @@ const MenuScreen = ({navigation}) => {
                   Empilez les blocs et complétez les lignes
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>4</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -125,6 +210,14 @@ const MenuScreen = ({navigation}) => {
                   Assemblez l'injection SQL et détruisez la table !
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>5</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -145,6 +238,14 @@ const MenuScreen = ({navigation}) => {
                   Rejoignez le marché local des builders d'IA !
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>6</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -165,6 +266,14 @@ const MenuScreen = ({navigation}) => {
                   La bataille cérébrale suprême des agents d'IA !
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>7</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -185,6 +294,14 @@ const MenuScreen = ({navigation}) => {
                   Résolvez des conflits de Pull Request sous pression CPU !
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>8</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -205,6 +322,14 @@ const MenuScreen = ({navigation}) => {
                   Aidez JuliA à s'échapper en moins de 5 minutes !
                 </Text>
               </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>9</Text>
+                </View>
+              )}
             </TouchableOpacity>
           </ScrollView>
 
@@ -214,7 +339,10 @@ const MenuScreen = ({navigation}) => {
             accessibilityRole="button"
             accessibilityLabel="À Propos"
             accessibilityHint="Afficher les informations à propos de l'application">
-            <Text style={styles.aboutButtonText}>ℹ️ À Propos</Text>
+            <Text style={styles.aboutButtonText}>
+              ℹ️ À Propos{' '}
+              {isWeb && <Text style={styles.aboutKeyBadgeText}>[i]</Text>}
+            </Text>
           </TouchableOpacity>
 
           <AboutModal
@@ -323,6 +451,30 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  keyBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 24,
+  },
+  keyBadgeText: {
+    color: '#FFD700',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
+  aboutKeyBadgeText: {
+    color: '#FFD700',
+    fontSize: 13,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
   },
 });
 
