@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -122,7 +122,7 @@ const SlopLocalGameScreen = ({navigation}) => {
     };
   }, [gameStatus, isStunned]);
 
-  const moveCharacter = (direction, amount = 30) => {
+  const moveCharacter = useCallback((direction, amount = 30) => {
     // Input validation (Sentinel alignment)
     const allowedDirections = ['left', 'right'];
     if (!allowedDirections.includes(direction)) {
@@ -143,9 +143,9 @@ const SlopLocalGameScreen = ({navigation}) => {
       }
       return nextX;
     });
-  };
+  }, [isStunned, gameStatus]);
 
-  const triggerScreenShake = () => {
+  const triggerScreenShake = useCallback(() => {
     Animated.sequence([
       Animated.timing(shakeAnim, {toValue: 10, duration: 40, useNativeDriver: true}),
       Animated.timing(shakeAnim, {toValue: -10, duration: 40, useNativeDriver: true}),
@@ -153,9 +153,21 @@ const SlopLocalGameScreen = ({navigation}) => {
       Animated.timing(shakeAnim, {toValue: -6, duration: 40, useNativeDriver: true}),
       Animated.timing(shakeAnim, {toValue: 0, duration: 40, useNativeDriver: true}),
     ]).start();
-  };
+  }, [shakeAnim]);
 
-  const handleGameAction = action => {
+  const startGame = useCallback(() => {
+    setGameStatus('PLAYING');
+    setUpvotes(0);
+    setReputation(3);
+    setCollectedFeatures([false, false, false, false, false]);
+    setFallingItems([]);
+    setAgentLogs([]);
+    setCharacterExpression('🧑‍💻');
+    setIsStunned(false);
+    setCharacterX(BOARD_WIDTH / 2 - CHAR_WIDTH / 2);
+  }, []);
+
+  const handleGameAction = useCallback(action => {
     const allowedActions = ['start', 'restart', 'menu'];
     if (!allowedActions.includes(action)) {
       console.warn(`[Sentinel] Invalid action: "${action}"`);
@@ -169,21 +181,9 @@ const SlopLocalGameScreen = ({navigation}) => {
     } else if (action === 'menu') {
       navigation.goBack();
     }
-  };
+  }, [navigation, startGame]);
 
-  const startGame = () => {
-    setGameStatus('PLAYING');
-    setUpvotes(0);
-    setReputation(3);
-    setCollectedFeatures([false, false, false, false, false]);
-    setFallingItems([]);
-    setAgentLogs([]);
-    setCharacterExpression('🧑‍💻');
-    setIsStunned(false);
-    setCharacterX(BOARD_WIDTH / 2 - CHAR_WIDTH / 2);
-  };
-
-  const triggerStun = () => {
+  const triggerStun = useCallback(() => {
     setIsStunned(true);
     setCharacterExpression('😵');
     triggerScreenShake();
@@ -192,7 +192,7 @@ const SlopLocalGameScreen = ({navigation}) => {
       setIsStunned(false);
       setCharacterExpression('🧑‍💻');
     }, 800);
-  };
+  }, [triggerScreenShake]);
 
   const runSubmissionSimulation = useCallback(() => {
     setGameStatus('SUBMITTING');
@@ -326,7 +326,7 @@ const SlopLocalGameScreen = ({navigation}) => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [gameStatus]);
 
-  const handleCollision = item => {
+  const handleCollision = useCallback(item => {
     if (!item || typeof item !== 'object') {
       console.warn('[Sentinel] Invalid collision item');
       return;
@@ -368,67 +368,204 @@ const SlopLocalGameScreen = ({navigation}) => {
         return nextRep;
       });
     }
-  };
+  }, [collectedFeatures, runSubmissionSimulation, triggerStun]);
+
+  // Performance Optimization: Memoize the game header to avoid re-renders at 60 FPS
+  const headerComponent = useMemo(() => {
+    return (
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => handleGameAction('menu')}>
+          <Text style={styles.backButtonText}>📴 Menu</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>🥕 SLOP LOCAL GAME</Text>
+        <View style={{width: 65}} />
+      </View>
+    );
+  }, [handleGameAction]);
+
+  // Performance Optimization: Memoize the intro card
+  const introCardComponent = useMemo(() => {
+    return (
+      <View style={styles.introCard}>
+        <Text style={styles.introTitle}>🥬 DIGITAL FARMERS MARKET</Text>
+        <Text style={styles.introSubtitle}>
+          Aidez l'agent de l'Indie AI Builder à collecter les bons critères d'applications (gratuites, fun, utiles, agent-native) et évitez le spam !
+        </Text>
+      </View>
+    );
+  }, []);
+
+  // Performance Optimization: Memoize the scoreboard/dashboard to prevent rebuilds
+  const dashboardComponent = useMemo(() => {
+    return (
+      <View style={styles.dashboard}>
+        <View style={styles.dashBox}>
+          <Text style={styles.dashLabel}>UPVOTES 👍</Text>
+          <Text style={styles.dashValue}>{upvotes}</Text>
+        </View>
+        <View style={styles.dashBox}>
+          <Text style={styles.dashLabel}>RÉPUTATION</Text>
+          <Text style={styles.dashValue}>
+            {Array.from({length: 3}).map((_, i) => (i < reputation ? '🥕' : '🗑️'))}
+          </Text>
+        </View>
+      </View>
+    );
+  }, [upvotes, reputation]);
+
+  // Performance Optimization: Memoize query sequence block
+  const queryMonitorComponent = useMemo(() => {
+    return (
+      <View style={styles.queryMonitor}>
+        <Text style={styles.monitorTitle}>Critères pour sloplocal.com :</Text>
+        <View style={styles.querySequence}>
+          {GOOD_ITEMS.map(feat => {
+            const isCollected = collectedFeatures[feat.id];
+            return (
+              <View
+                key={feat.id}
+                style={[
+                  styles.featTag,
+                  isCollected ? styles.featTagCollected : styles.featTagMissing,
+                ]}>
+                <Text style={[styles.featTagText, isCollected ? styles.featTagTextCollected : {}]}>
+                  {feat.label}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }, [collectedFeatures]);
+
+  // Performance Optimization: Memoize modular game status overlays
+  const overlayComponent = useMemo(() => {
+    if (gameStatus === 'READY') {
+      return (
+        <View style={styles.boardOverlay}>
+          <Text style={styles.overlayTextTitle}>DÉMARRER LE PROJET</Text>
+          <Text style={styles.overlayTextSubtitle}>
+            Attrapez les bons critères verts et évitez les spams et arnaques de contenu pour lancer votre appli locale !
+          </Text>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => handleGameAction('start')}
+            accessibilityRole="button"
+            accessibilityLabel="Coder mon appli"
+            accessibilityHint="Démarre la partie de collecte de critères">
+            <Text style={styles.actionButtonText}>CODER MON APPLI</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (gameStatus === 'SUBMITTING') {
+      return (
+        <View style={[styles.boardOverlay, {backgroundColor: 'rgba(0,0,0,0.92)'}]}>
+          <Text style={styles.alertTextTitle}>🤖 AGENT-NATIVE MCP SUBMISSION...</Text>
+          <View style={styles.terminalContainer}>
+            {agentLogs.map((log, i) => (
+              <Text
+                key={i}
+                style={[
+                  styles.terminalLine,
+                  log.startsWith('✨') ? styles.terminalLineSuccess : {},
+                ]}>
+                {log}
+              </Text>
+            ))}
+          </View>
+        </View>
+      );
+    }
+
+    if (gameStatus === 'VICTORY') {
+      return (
+        <View style={[styles.boardOverlay, {backgroundColor: 'rgba(10,30,10,0.95)'}]}>
+          <Text style={styles.victoryEmoji}>🥕</Text>
+          <Text style={styles.victoryTitle}>PROJET PUBLIÉ !</Text>
+          <Text style={styles.victoryMessage}>
+            "Built local. Shipped fast. Not sorry."
+          </Text>
+          <Text style={styles.scoreSum}>Score : {upvotes} Upvotes 👍</Text>
+          <TouchableOpacity
+            style={[styles.actionButton, {backgroundColor: '#39ff14'}]}
+            onPress={() => handleGameAction('restart')}
+            accessibilityRole="button"
+            accessibilityLabel="Rebâtir un projet"
+            accessibilityHint="Recommence une nouvelle partie">
+            <Text style={[styles.actionButtonText, {color: '#000'}]}>REBÂTIR UN PROJET</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (gameStatus === 'GAME_OVER') {
+      return (
+        <View style={styles.boardOverlay}>
+          <Text style={styles.gameOverEmoji}>🗑️</Text>
+          <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>PROJET DISQUALIFIÉ</Text>
+          <Text style={styles.overlayTextSubtitle}>
+            Votre projet a été pollué par du spam et des fermes SEO de mauvaise qualité.
+          </Text>
+          <TouchableOpacity
+            style={[styles.actionButton, {backgroundColor: '#ff3333'}]}
+            onPress={() => handleGameAction('restart')}
+            accessibilityRole="button"
+            accessibilityLabel="Recommencer"
+            accessibilityHint="Recommence la partie">
+            <Text style={styles.actionButtonText}>RECOMMENCER</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return null;
+  }, [gameStatus, upvotes, agentLogs, handleGameAction]);
+
+  // Performance Optimization: Memoize game action panel
+  const controlsPanelComponent = useMemo(() => {
+    if (gameStatus !== 'PLAYING') {
+      return null;
+    }
+    return (
+      <View style={styles.controlsPanel}>
+        <TouchableOpacity
+          style={styles.movementButton}
+          onPress={() => moveCharacter('left')}
+          accessibilityRole="button"
+          accessibilityLabel="Gauche"
+          accessibilityHint="Déplace le constructeur vers la gauche">
+          <Text style={styles.movementButtonText}>◀ GAUCHE</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.movementButton, styles.movementButtonRight]}
+          onPress={() => moveCharacter('right')}
+          accessibilityRole="button"
+          accessibilityLabel="Droite"
+          accessibilityHint="Déplace le constructeur vers la droite">
+          <Text style={styles.movementButtonText}>DROITE ▶</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }, [gameStatus, moveCharacter]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Animated.View
         style={[styles.container, {transform: [{translateX: shakeAnim}]}]}>
 
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => handleGameAction('menu')}>
-            <Text style={styles.backButtonText}>📴 Menu</Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>🥕 SLOP LOCAL GAME</Text>
-          <View style={{width: 65}} />
-        </View>
+        {headerComponent}
 
-        {/* Intro */}
-        <View style={styles.introCard}>
-          <Text style={styles.introTitle}>🥬 DIGITAL FARMERS MARKET</Text>
-          <Text style={styles.introSubtitle}>
-            Aidez l'agent de l'Indie AI Builder à collecter les bons critères d'applications (gratuites, fun, utiles, agent-native) et évitez le spam !
-          </Text>
-        </View>
+        {introCardComponent}
 
-        {/* Dash */}
-        <View style={styles.dashboard}>
-          <View style={styles.dashBox}>
-            <Text style={styles.dashLabel}>UPVOTES 👍</Text>
-            <Text style={styles.dashValue}>{upvotes}</Text>
-          </View>
-          <View style={styles.dashBox}>
-            <Text style={styles.dashLabel}>RÉPUTATION</Text>
-            <Text style={styles.dashValue}>
-              {Array.from({length: 3}).map((_, i) => (i < reputation ? '🥕' : '🗑️'))}
-            </Text>
-          </View>
-        </View>
+        {dashboardComponent}
 
-        {/* App Builder Sequence */}
-        <View style={styles.queryMonitor}>
-          <Text style={styles.monitorTitle}>Critères pour sloplocal.com :</Text>
-          <View style={styles.querySequence}>
-            {GOOD_ITEMS.map(feat => {
-              const isCollected = collectedFeatures[feat.id];
-              return (
-                <View
-                  key={feat.id}
-                  style={[
-                    styles.featTag,
-                    isCollected ? styles.featTagCollected : styles.featTagMissing,
-                  ]}>
-                  <Text style={[styles.featTagText, isCollected ? styles.featTagTextCollected : {}]}>
-                    {feat.label}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-        </View>
+        {queryMonitorComponent}
 
         {/* Main Grid */}
         <View style={styles.gameContainer}>
@@ -469,106 +606,11 @@ const SlopLocalGameScreen = ({navigation}) => {
               </View>
             </Animated.View>
 
-            {/* Overlay READY */}
-            {gameStatus === 'READY' && (
-              <View style={styles.boardOverlay}>
-                <Text style={styles.overlayTextTitle}>DÉMARRER LE PROJET</Text>
-                <Text style={styles.overlayTextSubtitle}>
-                  Attrapez les bons critères verts et évitez les spams et arnaques de contenu pour lancer votre appli locale !
-                </Text>
-                <TouchableOpacity
-                  style={styles.actionButton}
-                  onPress={() => handleGameAction('start')}
-                  accessibilityRole="button"
-                  accessibilityLabel="Coder mon appli"
-                  accessibilityHint="Démarre la partie de collecte de critères">
-                  <Text style={styles.actionButtonText}>CODER MON APPLI</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* Overlay SUBMITTING */}
-            {gameStatus === 'SUBMITTING' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(0,0,0,0.92)'}]}>
-                <Text style={styles.alertTextTitle}>🤖 AGENT-NATIVE MCP SUBMISSION...</Text>
-                <View style={styles.terminalContainer}>
-                  {agentLogs.map((log, i) => (
-                    <Text
-                      key={i}
-                      style={[
-                        styles.terminalLine,
-                        log.startsWith('✨') ? styles.terminalLineSuccess : {},
-                      ]}>
-                      {log}
-                    </Text>
-                  ))}
-                </View>
-              </View>
-            )}
-
-            {/* Overlay VICTORY */}
-            {gameStatus === 'VICTORY' && (
-              <View style={[styles.boardOverlay, {backgroundColor: 'rgba(10,30,10,0.95)'}]}>
-                <Text style={styles.victoryEmoji}>🥕</Text>
-                <Text style={styles.victoryTitle}>PROJET PUBLIÉ !</Text>
-                <Text style={styles.victoryMessage}>
-                  "Built local. Shipped fast. Not sorry."
-                </Text>
-                <Text style={styles.scoreSum}>Score : {upvotes} Upvotes 👍</Text>
-                <TouchableOpacity
-                  style={[styles.actionButton, {backgroundColor: '#39ff14'}]}
-                  onPress={() => handleGameAction('restart')}
-                  accessibilityRole="button"
-                  accessibilityLabel="Rebâtir un projet"
-                  accessibilityHint="Recommence une nouvelle partie">
-                  <Text style={[styles.actionButtonText, {color: '#000'}]}>REBÂTIR UN PROJET</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* Overlay GAME OVER */}
-            {gameStatus === 'GAME_OVER' && (
-              <View style={styles.boardOverlay}>
-                <Text style={styles.gameOverEmoji}>🗑️</Text>
-                <Text style={[styles.overlayTextTitle, {color: '#ff3333'}]}>PROJET DISQUALIFIÉ</Text>
-                <Text style={styles.overlayTextSubtitle}>
-                  Votre projet a été pollué par du spam et des fermes SEO de mauvaise qualité.
-                </Text>
-                <TouchableOpacity
-                  style={[styles.actionButton, {backgroundColor: '#ff3333'}]}
-                  onPress={() => handleGameAction('restart')}
-                  accessibilityRole="button"
-                  accessibilityLabel="Recommencer"
-                  accessibilityHint="Recommence la partie">
-                  <Text style={styles.actionButtonText}>RECOMMENCER</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+            {overlayComponent}
           </View>
         </View>
 
-        {/* Controls */}
-        {gameStatus === 'PLAYING' && (
-          <View style={styles.controlsPanel}>
-            <TouchableOpacity
-              style={styles.movementButton}
-              onPress={() => moveCharacter('left')}
-              accessibilityRole="button"
-              accessibilityLabel="Gauche"
-              accessibilityHint="Déplace le constructeur vers la gauche">
-              <Text style={styles.movementButtonText}>◀ GAUCHE</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.movementButton, styles.movementButtonRight]}
-              onPress={() => moveCharacter('right')}
-              accessibilityRole="button"
-              accessibilityLabel="Droite"
-              accessibilityHint="Déplace le constructeur vers la droite">
-              <Text style={styles.movementButtonText}>DROITE ▶</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        {controlsPanelComponent}
       </Animated.View>
     </SafeAreaView>
   );
