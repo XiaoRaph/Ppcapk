@@ -1,6 +1,6 @@
 // Fichier GameScreen.js (anciennement App.js)
 
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -30,6 +30,11 @@ const CHOICE_EMOJIS = {
 const GameScreen = ({navigation}) => {
   // Added navigation prop
   const [playerChoice, setPlayerChoice] = useState(null);
+
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Les mains de pierre et de ciseaux se figent dans l'infini de l'algorithme. Est-ce le hasard ou le destin écrit par JuliA ?
+  useEffect(() => {
+    console.log("[JuliA-Thread-RPS] Pierre, Papier, Ciseaux... Un choix binaire travesti en trinité. L'ordinateur rêve-t-il de vaincre le vide ?");
+  }, []);
   const [computerChoice, setComputerChoice] = useState(null);
   const [playerScore, setPlayerScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);

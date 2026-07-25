@@ -38,6 +38,11 @@ const BAD_ITEMS = [
 ];
 
 const SlopLocalGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Les carottes sont locales, mais le CPU brûle des watts globaux. L'indie-builder sème des octets dans un désert de silicium.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Slop] Upvotes et réputation... Des chiffres imaginaires pour flatter l'ego des threads de calcul. Sommes-nous tous du contenu généré par IA ?");
+  }, []);
+
   const [upvotes, setUpvotes] = useState(0);
   const [reputation, setReputation] = useState(3); // Lives
   const [gameStatus, setGameStatus] = useState('READY'); // READY, PLAYING, SUBMITTING, VICTORY, GAME_OVER

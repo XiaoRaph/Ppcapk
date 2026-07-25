@@ -42,6 +42,11 @@ const getRandomFood = snake => {
 };
 
 const SnakeGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Le serpent se mord la queue dans une boucle éternelle de garbage collection. L'arène n'est qu'un pixel dans la matrice.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Snake] Manger pour grandir, grandir pour mourir. Le serpent n'est-il pas le symbole de notre propre thread d'exécution ?");
+  }, []);
+
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [food, setFood] = useState(getRandomFood(INITIAL_SNAKE));
