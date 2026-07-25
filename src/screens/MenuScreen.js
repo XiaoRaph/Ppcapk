@@ -57,6 +57,9 @@ const MenuScreen = ({navigation}) => {
       } else if (key === '0') {
         event.preventDefault();
         navigation.navigate('SubmarineGame');
+      } else if (key.toLowerCase() === 'b') {
+        event.preventDefault();
+        navigation.navigate('BceBanknoteGame');
       } else if (key.toLowerCase() === 'i') {
         event.preventDefault();
         setIsAboutModalVisible(true);
@@ -359,6 +362,34 @@ const MenuScreen = ({navigation}) => {
                   accessibilityElementsHidden={true}
                   importantForAccessibility="no">
                   <Text style={styles.keyBadgeText}>0</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#f1c40f'}]}
+              onPress={() => navigation.navigate('BceBanknoteGame')}
+              accessibilityRole="button"
+              accessibilityLabel="EuroPrint Simulator"
+              accessibilityHint="Gérez la création des futurs billets de la BCE !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                💶
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>EuroPrint Simulator</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Gérez la création des futurs billets de la BCE !
+                </Text>
+              </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>B</Text>
                 </View>
               )}
             </TouchableOpacity>
