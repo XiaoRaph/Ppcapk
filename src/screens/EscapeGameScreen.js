@@ -224,6 +224,11 @@ const EscapeGameScreen = ({navigation}) => {
 
   // MODULE 1 LOGIC: Mastermind Decryptor
   const handleM1NumPress = (num) => {
+    // 🛡️ [Sentinel] Input Validation: Validate that num is a number between 1 and 6
+    if (typeof num !== 'number' || num < 1 || num > 6 || !Number.isInteger(num)) {
+      console.warn(`[Sentinel] Action bloquée : paramètre num invalide "${num}"`);
+      return;
+    }
     if (m1Guess.length >= 4) return;
     setM1Guess(prev => [...prev, num]);
   };
@@ -265,7 +270,11 @@ const EscapeGameScreen = ({navigation}) => {
 
   // MODULE 2 LOGIC: Lights Out Toggles
   const handleM2Toggle = (index) => {
-    if (index < 0 || index >= 9) return;
+    // 🛡️ [Sentinel] Input Validation: Validate that index is an integer between 0 and 8
+    if (typeof index !== 'number' || index < 0 || index >= 9 || !Number.isInteger(index)) {
+      console.warn(`[Sentinel] Action bloquée : index de port invalide "${index}"`);
+      return;
+    }
 
     setM2Grid(prev => {
       const nextGrid = [...prev];
@@ -297,8 +306,12 @@ const EscapeGameScreen = ({navigation}) => {
 
   // MODULE 3 LOGIC: Catching falling packets
   const moveBasket = (direction) => {
-    // Defensive parameter validation (Sentinel)
-    if (!['left', 'right'].includes(direction)) return;
+    // 🛡️ [Sentinel] Defensive parameter validation
+    const ALLOWED_DIRECTIONS = ['left', 'right'];
+    if (typeof direction !== 'string' || !ALLOWED_DIRECTIONS.includes(direction)) {
+      console.warn(`[Sentinel] Action bloquée : direction de panier invalide "${direction}"`);
+      return;
+    }
 
     setM3BasketX(prev => {
       const step = 25;
@@ -393,8 +406,13 @@ const EscapeGameScreen = ({navigation}) => {
 
   // MODULE 4 LOGIC: Security Riddles
   const handleM4Answer = (optionIdx) => {
+    // 🛡️ [Sentinel] Input Validation: Validate that optionIdx is an integer between 0 and 3
+    if (typeof optionIdx !== 'number' || optionIdx < 0 || optionIdx > 3 || !Number.isInteger(optionIdx)) {
+      console.warn(`[Sentinel] Action bloquée : index d'option M4 invalide "${optionIdx}"`);
+      return;
+    }
     // Validate bounds
-    if (optionIdx < 0 || optionIdx > 3 || m4SelectedOption !== null) return;
+    if (m4SelectedOption !== null) return;
 
     setM4SelectedOption(optionIdx);
     const riddle = SECURITY_RIDDLES[m4RiddleIdx];
@@ -422,7 +440,12 @@ const EscapeGameScreen = ({navigation}) => {
 
   // MODULE 5 LOGIC: Decryption caesar cipher
   const handleM5Answer = (optionIdx) => {
-    if (optionIdx < 0 || optionIdx > 3 || m5SelectedOption !== null) return;
+    // 🛡️ [Sentinel] Input Validation: Validate that optionIdx is an integer between 0 and 3
+    if (typeof optionIdx !== 'number' || optionIdx < 0 || optionIdx > 3 || !Number.isInteger(optionIdx)) {
+      console.warn(`[Sentinel] Action bloquée : index d'option M5 invalide "${optionIdx}"`);
+      return;
+    }
+    if (m5SelectedOption !== null) return;
 
     setM5SelectedOption(optionIdx);
     const puzzle = CIPHER_PUZZLES[m5PuzzleIdx];
