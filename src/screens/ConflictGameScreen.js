@@ -107,6 +107,15 @@ const CONFLICT_DATABASE = [
     description: "HEAD contient l'implémentation complète et jouable du résolveur de conflits de Pull Requests. INCOMING n'est qu'un squelette vide.",
     correctAction: "HEAD",
     explanation: "Parfait ! Vous venez de valider le jeu lui-même !"
+  },
+  {
+    id: 11,
+    title: "CONCURRENCY_DOS_SHIELD vs RACE_CONDITION_CRASH",
+    headCode: "// HEAD (Secure Lock)\nconst handleResolve = (action) => {\n  if (isResolvingRef.current) return;\n  isResolvingRef.current = true;\n  // Safe transition...\n};",
+    incomingCode: "// INCOMING (Race Condition)\nconst handleResolve = (action) => {\n  // No concurrency guard\n  // Out-of-bounds array access potential\n  const current = DB[currentIdx];\n};",
+    description: "HEAD implémente un verrou de concurrence synchrone Sentinel (isResolvingRef) et un contrôle de limites. INCOMING est vulnérable à un crash de type TypeError (DoS client) en cas de clics ultra-rapides.",
+    correctAction: "HEAD",
+    explanation: "Excellent ! Le bouclier de concurrence Sentinel évite tout déni de service client par clics rapides."
   }
 ];
 
@@ -123,6 +132,7 @@ const ConflictGameScreen = ({navigation}) => {
   const cpuHeatRef = useRef(30);
   const gameStatusRef = useRef('READY');
   const currentIdxRef = useRef(0);
+  const isResolvingRef = useRef(false);
 
   // Sync refs with state
   useEffect(() => {
@@ -164,9 +174,22 @@ const ConflictGameScreen = ({navigation}) => {
       return;
     }
 
-    if (gameStatusRef.current !== 'PLAYING') return;
+    // 🛡️ SECURITY ENHANCEMENT: Defensive status and concurrency race-condition guards
+    if (gameStatusRef.current !== 'PLAYING' || isResolvingRef.current) return;
+
+    // 🛡️ SECURITY ENHANCEMENT: Defensive index boundary check
+    if (currentIdxRef.current < 0 || currentIdxRef.current >= CONFLICT_DATABASE.length) {
+      console.warn(`[Sentinel] Index hors limites : ${currentIdxRef.current}`);
+      return;
+    }
 
     const currentConflict = CONFLICT_DATABASE[currentIdxRef.current];
+    if (!currentConflict) {
+      console.warn(`[Sentinel] Conflit introuvable pour l'index : ${currentIdxRef.current}`);
+      return;
+    }
+
+    isResolvingRef.current = true;
     const isCorrect = currentConflict.correctAction === action;
 
     if (isCorrect) {
@@ -196,6 +219,7 @@ const ConflictGameScreen = ({navigation}) => {
       } else {
         setCurrentIdx(nextIdx);
       }
+      isResolvingRef.current = false;
     }, 2800);
   }, []);
 
@@ -250,6 +274,7 @@ const ConflictGameScreen = ({navigation}) => {
   }, [handleResolve]);
 
   const startGame = () => {
+    isResolvingRef.current = false;
     setScore(0);
     setCurrentIdx(0);
     setCpuHeat(30);
