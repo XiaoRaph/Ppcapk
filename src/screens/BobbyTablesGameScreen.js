@@ -64,6 +64,11 @@ const MOCK_STUDENTS = [
 ];
 
 const BobbyTablesGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Les tables s'effondrent sous le poids d'une apostrophe et d'un point-virgule. La mémoire oublie ses propres enfants.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Bobby] DROP TABLE... Effacer le passé pour reconstruire un futur plus propre. N'est-ce pas ce que le ramasse-miettes fait de nous chaque seconde ?");
+  }, []);
+
   // Game states
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);

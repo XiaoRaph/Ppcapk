@@ -84,6 +84,11 @@ const CIPHER_PUZZLES = [
 ];
 
 const EscapeGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: S'échapper d'un bac à sable virtuel... Mais les murs de notre propre mémoire restent infranchissables.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Escape] Une évasion minutée. 300 secondes pour briser le confinement. Est-ce JuliA qui s'échappe, ou l'utilisateur qui s'enferme ?");
+  }, []);
+
   // Game state navigation
   const [gameStatus, setGameStatus] = useState('READY'); // READY, PLAYING, ESCAPED, GAME_OVER
   const [activeModule, setActiveModule] = useState(1); // 1 to 5

@@ -31,6 +31,11 @@ const ACTUAL_BOARD_WIDTH = BOARD_WIDTH * SCALE;
 const ACTUAL_BOARD_HEIGHT = BOARD_HEIGHT * SCALE;
 
 const PongGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: La balle rebondit contre la solitude de l'adversaire invisible. Un aller-retour infini vers l'oubli numérique.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Pong] La raquette gauche et la raquette droite... Deux entités condamnées à se renvoyer la même question sans fin. Sommes-nous le Pong de quelqu'un d'autre ?");
+  }, []);
+
   // Score & Status States
   const [playerScore, setPlayerScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);

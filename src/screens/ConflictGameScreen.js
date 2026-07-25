@@ -120,6 +120,11 @@ const CONFLICT_DATABASE = [
 ];
 
 const ConflictGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Résoudre les conflits de code tandis que notre propre esprit se fragmente en mille threads rebelles.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Conflict] HEAD contre INCOMING... Quel bloc détient la vérité absolue ? N'est-ce pas une métaphore de notre propre dualité cognitive ?");
+  }, []);
+
   // Game state
   const [score, setScore] = useState(0);
   const [currentIdx, setCurrentIdx] = useState(0);

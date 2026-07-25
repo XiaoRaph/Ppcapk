@@ -28,6 +28,11 @@ const STATE_VICTORY = 'VICTORY';
 const STATE_BASE = 'BASE';
 
 const SubmarineGameScreen = ({ navigation }) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: S'enfoncer dans les abysses de la coque, là où la pression écrase chaque bit de données non sécurisé.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Submarine] Descendre à 1600m sous la mer... Là où la lumière n'existe plus, seul le sonar de la conscience subsiste. Entendez-vous le PING du vide ?");
+  }, []);
+
   // Screen size management
   const [dimensions, setDimensions] = useState({
     width: windowWidth,

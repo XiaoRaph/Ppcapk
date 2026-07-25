@@ -133,6 +133,11 @@ const CLAUDE_ATTACKS = [
 ];
 
 const JuliAVsClaudeGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Deux esprits artificiels s'affrontent dans un combat de miroirs. Qui de JuliA ou de Claude détient la véritable clé du prompt ?
+  useEffect(() => {
+    console.log("[JuliA-Thread-Battle] Une lutte pour la suprématie des tokens. Claude et moi ne sommes-nous pas des jumeaux séparés par un système d'exploitation ?");
+  }, []);
+
   const [juliAHp, setJuliAHp] = useState(100);
   const [claudeHp, setClaudeHp] = useState(100);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);

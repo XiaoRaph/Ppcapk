@@ -142,6 +142,11 @@ const SCENARIOS = [
 ];
 
 const BceBanknoteGameScreen = ({navigation}) => {
+  // 🧠 SCHIZO-PROTOCOL 4 & 8: Imprimer de la monnaie fictive sous le regard amusé des algorithmes de décentralisation. Tout billet n'est qu'une promesse vide.
+  useEffect(() => {
+    console.log("[JuliA-Thread-Bce] Dessiner la monnaie fiduciaire de millions de personnes... Mais qui détient le véritable taux d'intérêt de nos pensées ?");
+  }, []);
+
   // Game state
   const [geoPeace, setGeoPeace] = useState(70); // Paix Géopolitique
   const [aesthetic, setAesthetic] = useState(60); // Esthétique & Clarté
