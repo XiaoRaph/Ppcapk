@@ -11,6 +11,7 @@ import JuliAVsClaudeGameScreen from './src/screens/JuliAVsClaudeGameScreen';
 import ConflictGameScreen from './src/screens/ConflictGameScreen';
 import EscapeGameScreen from './src/screens/EscapeGameScreen';
 import SubmarineGameScreen from './src/screens/SubmarineGameScreen';
+import BceBanknoteGameScreen from './src/screens/BceBanknoteGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -29,6 +30,7 @@ function App() {
       'ConflictGame',
       'EscapeGame',
       'SubmarineGame',
+      'BceBanknoteGame',
     ];
     if (!VALID_SCREENS.includes(screenName)) {
       console.warn(`[Sentinel] Tentative de navigation non autorisée vers : "${screenName}"`);
@@ -76,6 +78,9 @@ function App() {
       )}
       {currentScreen === 'SubmarineGame' && (
         <SubmarineGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'BceBanknoteGame' && (
+        <BceBanknoteGameScreen navigation={navigation} />
       )}
     </View>
   );
