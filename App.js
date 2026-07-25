@@ -10,6 +10,7 @@ import SlopLocalGameScreen from './src/screens/SlopLocalGameScreen';
 import JuliAVsClaudeGameScreen from './src/screens/JuliAVsClaudeGameScreen';
 import ConflictGameScreen from './src/screens/ConflictGameScreen';
 import EscapeGameScreen from './src/screens/EscapeGameScreen';
+import SubmarineGameScreen from './src/screens/SubmarineGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -27,6 +28,7 @@ function App() {
       'JuliAVsClaudeGame',
       'ConflictGame',
       'EscapeGame',
+      'SubmarineGame',
     ];
     if (!VALID_SCREENS.includes(screenName)) {
       console.warn(`[Sentinel] Tentative de navigation non autorisée vers : "${screenName}"`);
@@ -71,6 +73,9 @@ function App() {
       )}
       {currentScreen === 'EscapeGame' && (
         <EscapeGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'SubmarineGame' && (
+        <SubmarineGameScreen navigation={navigation} />
       )}
     </View>
   );

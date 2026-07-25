@@ -54,6 +54,9 @@ const MenuScreen = ({navigation}) => {
           event.preventDefault();
           navigation.navigate(screens[index]);
         }
+      } else if (key === '0') {
+        event.preventDefault();
+        navigation.navigate('SubmarineGame');
       } else if (key.toLowerCase() === 'i') {
         event.preventDefault();
         setIsAboutModalVisible(true);
@@ -328,6 +331,34 @@ const MenuScreen = ({navigation}) => {
                   accessibilityElementsHidden={true}
                   importantForAccessibility="no">
                   <Text style={styles.keyBadgeText}>9</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#00ffcc'}]}
+              onPress={() => navigation.navigate('SubmarineGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Mission Abysses : Simulateur Sous-Marin"
+              accessibilityHint="Pilotez un sous-marin et explorez la fosse des Mariannes !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                ⚓
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Mission Abysses</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Pilotez un sous-marin et explorez les abysses !
+                </Text>
+              </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>0</Text>
                 </View>
               )}
             </TouchableOpacity>
