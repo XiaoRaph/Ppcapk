@@ -60,6 +60,9 @@ const MenuScreen = ({navigation}) => {
       } else if (key.toLowerCase() === 'b') {
         event.preventDefault();
         navigation.navigate('BceBanknoteGame');
+      } else if (key.toLowerCase() === 'e') {
+        event.preventDefault();
+        navigation.navigate('EcosystemGame');
       } else if (key.toLowerCase() === 'i') {
         event.preventDefault();
         setIsAboutModalVisible(true);
@@ -390,6 +393,34 @@ const MenuScreen = ({navigation}) => {
                   accessibilityElementsHidden={true}
                   importantForAccessibility="no">
                   <Text style={styles.keyBadgeText}>B</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.menuButton, {borderLeftColor: '#39ff14'}]}
+              onPress={() => navigation.navigate('EcosystemGame')}
+              accessibilityRole="button"
+              accessibilityLabel="Planète Éco-Gestion"
+              accessibilityHint="Gérez et faites prospérer l'écosystème d'une planète entière !">
+              <Text
+                style={styles.menuButtonEmoji}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no">
+                🌌
+              </Text>
+              <View style={styles.menuButtonTextContainer}>
+                <Text style={styles.menuButtonTitle}>Planète Éco-Gestion</Text>
+                <Text style={styles.menuButtonDesc}>
+                  Gérez et faites prospérer l'écosystème d'une planète entière !
+                </Text>
+              </View>
+              {isWeb && (
+                <View
+                  style={styles.keyBadge}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no">
+                  <Text style={styles.keyBadgeText}>E</Text>
                 </View>
               )}
             </TouchableOpacity>

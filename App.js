@@ -12,6 +12,7 @@ import ConflictGameScreen from './src/screens/ConflictGameScreen';
 import EscapeGameScreen from './src/screens/EscapeGameScreen';
 import SubmarineGameScreen from './src/screens/SubmarineGameScreen';
 import BceBanknoteGameScreen from './src/screens/BceBanknoteGameScreen';
+import EcosystemGameScreen from './src/screens/EcosystemGameScreen';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('Menu');
@@ -31,6 +32,7 @@ function App() {
       'EscapeGame',
       'SubmarineGame',
       'BceBanknoteGame',
+      'EcosystemGame',
     ];
     if (!VALID_SCREENS.includes(screenName)) {
       console.warn(`[Sentinel] Tentative de navigation non autorisée vers : "${screenName}"`);
@@ -81,6 +83,9 @@ function App() {
       )}
       {currentScreen === 'BceBanknoteGame' && (
         <BceBanknoteGameScreen navigation={navigation} />
+      )}
+      {currentScreen === 'EcosystemGame' && (
+        <EcosystemGameScreen navigation={navigation} />
       )}
     </View>
   );
