@@ -10,8 +10,11 @@ import {
   Modal,
   Animated,
   Easing,
+  Platform,
 } from 'react-native';
 import AboutModal from '../components/AboutModal'; // Import the AboutModal component
+
+const isWeb = Platform.OS === 'web';
 
 const backgroundImage = require('../../assets/images/play_store_512.png'); // Adjusted path
 
@@ -131,6 +134,80 @@ const GameScreen = ({navigation}) => {
     setComputerScore(0);
   };
 
+  // Physical keyboard listener for Web
+  useEffect(() => {
+    if (!isWeb) {
+      return;
+    }
+
+    const handleKeyDown = event => {
+      if (isAboutModalVisible) {
+        if (
+          event.key === 'Escape' ||
+          event.key === ' ' ||
+          event.key === 'Enter'
+        ) {
+          event.preventDefault();
+          setIsAboutModalVisible(false);
+        }
+        return;
+      }
+
+      if (isMenuVisible) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setIsMenuVisible(false);
+        }
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+
+      if (gameInProgress && !isAnimating) {
+        if (key === '1' || key === 'p') {
+          event.preventDefault();
+          handlePlayerChoice('Pierre');
+        } else if (key === '2' || key === 'a') {
+          event.preventDefault();
+          handlePlayerChoice('Papier');
+        } else if (key === '3' || key === 'c') {
+          event.preventDefault();
+          handlePlayerChoice('Ciseaux');
+        }
+      } else if (!gameInProgress && !isAnimating) {
+        if (event.key === ' ' || event.key === 'Enter' || key === 'j') {
+          event.preventDefault();
+          nextRound();
+        }
+      }
+
+      if (key === 'r') {
+        event.preventDefault();
+        resetGame();
+      } else if (key === 'm') {
+        event.preventDefault();
+        setIsMenuVisible(true);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        navigation.goBack();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [
+    isAboutModalVisible,
+    isMenuVisible,
+    gameInProgress,
+    isAnimating,
+    handlePlayerChoice,
+    nextRound,
+    resetGame,
+    navigation,
+  ]);
+
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.overlay}>
@@ -219,7 +296,9 @@ const GameScreen = ({navigation}) => {
             accessibilityRole="button"
             accessibilityLabel="Ouvrir le menu"
             accessibilityHint="Affiche les options de navigation de l'arcade">
-            <Text style={styles.actualMenuButtonText}>☰</Text>
+            <Text style={styles.actualMenuButtonText}>
+              ☰ {isWeb && <Text style={styles.menuKeyBadgeText}>[M]</Text>}
+            </Text>
           </TouchableOpacity>
           <Text style={styles.title}>Pierre, Papier, Ciseaux</Text>
           <View style={{width: 50}} />
@@ -297,7 +376,9 @@ const GameScreen = ({navigation}) => {
                 accessibilityRole="button"
                 accessibilityLabel="Jouer encore"
                 accessibilityHint="Recommencer une nouvelle manche">
-                <Text style={styles.buttonText}>Jouer encore</Text>
+                <Text style={styles.buttonText}>
+                  Jouer encore {isWeb && <Text style={styles.playAgainKeyBadgeText}>[Entrée]</Text>}
+                </Text>
               </TouchableOpacity>
             </>
           ) : (
@@ -315,6 +396,13 @@ const GameScreen = ({navigation}) => {
                     {CHOICE_EMOJIS[choice.name]}
                   </Text>
                   <Text style={styles.buttonText}>{choice.name}</Text>
+                  {isWeb && (
+                    <View style={styles.keyBadge} accessibilityElementsHidden={true} importantForAccessibility="no">
+                      <Text style={styles.keyBadgeText}>
+                        {choice.name === 'Pierre' ? '1' : choice.name === 'Papier' ? '2' : '3'}
+                      </Text>
+                    </View>
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
@@ -328,7 +416,9 @@ const GameScreen = ({navigation}) => {
           accessibilityRole="button"
           accessibilityLabel="Réinitialiser le Score"
           accessibilityHint="Remettre à zéro les scores de la partie">
-          <Text style={styles.buttonText}>Réinitialiser le Score</Text>
+          <Text style={styles.buttonText}>
+            Réinitialiser le Score {isWeb && <Text style={styles.resetKeyBadgeText}>[R]</Text>}
+          </Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -519,6 +609,42 @@ const styles = StyleSheet.create({
     width: '90%',
     position: 'absolute',
     bottom: 30,
+  },
+  keyBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 18,
+  },
+  keyBadgeText: {
+    color: '#FFD700',
+    fontSize: 10,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
+  playAgainKeyBadgeText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
+  resetKeyBadgeText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
+  menuKeyBadgeText: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
   },
   // Styles for the Menu Modal
   modalOverlay: {

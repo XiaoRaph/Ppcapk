@@ -11,3 +11,7 @@
 ## 2026-07-13 - Visual Keyboard Badges and Shortcuts for Web Navigation
 **Learning:** In React Native Web arcade platforms, adding desktop keyboard navigation (keys '1'-'9' and modal controls) accompanied by neat, conditional visual key badges significantly enhances both visual delight, accessibility, and intuitive navigation for desktop power users.
 **Action:** When targeting the Web platform from a React Native codebase, conditionally render distinct, theme-integrated key badge hints next to interactive list items, and manage global document keyboard listeners carefully with proper cleanups in a `useEffect`.
+
+## 2026-07-14 - Screen Reader Hygiene for Keyboard Badges on React Native Web
+**Learning:** Adding visual keyboard badge hints (such as `[1]` or `[Entrée]`) directly to interactive buttons can create repetitive noise for screen readers, which already announce the button's action and identity.
+**Action:** Hide decorative or redundant visual key badge labels from screen readers by wrapping them in dedicated elements styled/configured with `accessibilityElementsHidden={true}` and `importantForAccessibility="no"`.
